@@ -120,8 +120,9 @@ $.getJSON('raw.json', {})
         },
         callback: function(graph) {
           nv.utils.windowResize(function() {
+            console.log('call');
             var width = nv.utils.windowSize().width;
-            var height = nv.utils.windowSize().height;
+            var height = nv.utils.windowSize().height - 30;
             graph.width(width).height(height);
 
             d3.select('#chart svg')
