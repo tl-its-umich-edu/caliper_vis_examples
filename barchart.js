@@ -291,10 +291,10 @@ function update() {
         return Math.round(d);
       }
       if (mode ==='percent') {
-        return d + ' %'
+        return d + ' %';
       }
       if (mode ==='time') {
-        return d + ' s'
+        return d + ' s';
       }
 
     });
