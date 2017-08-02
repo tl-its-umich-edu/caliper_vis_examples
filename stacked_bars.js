@@ -104,7 +104,7 @@ $.getJSON('raw.json', {})
             .duration(1000)
             .groupSpacing(0.3)
             .width(width)
-            .height(height)
+            .height(height - 30)
             .stacked(true)
             .staggerLabels(true)
             .reduceXTicks(false);

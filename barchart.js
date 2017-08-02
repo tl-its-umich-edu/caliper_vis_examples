@@ -1,3 +1,7 @@
+// command to extract and simplify caliper JSONL events
+// cat your_raw_file.jsonl | jq  -s  '[.[] | select(.action=="http://purl.imsglobal.org/vocab/caliper/v1/action#Completed") |  {problem_set: .object.isPartOf.name, problem: .object.name, answerCorrect: .generated.extensions.isStudentAnswerCorrect, time: .generated.attempt.duration, actor: .actor.name, start: .generated.attempt.startedAtTime, end:  .generated.attempt.endedAtTime, class: .group.name}]'  >  your_new_file.json
+
+
 historicalBarChart = [{
   values: []
 }];
