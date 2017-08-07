@@ -58,6 +58,7 @@ $.getJSON('all_anon_compacted.json', {})
             series:item.action
           });
         }
+
       });
 
       d3.selectAll("svg > *").remove();
