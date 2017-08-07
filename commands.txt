@@ -1,0 +1,16 @@
+Commands to extract and simplify caliper JSONL events
+
+Get all action#Completed events
+// cat your_raw_file.jsonl | jq  -s  '[.[] | select(.action=="http://purl.imsglobal.org/vocab/caliper/v1/action#Completed") |  {problem_set: .object.isPartOf.name, problem: .object.name, answerCorrect: .generated.extensions.isStudentAnswerCorrect, time: .generated.attempt.duration, actor: .actor.name, start: .generated.attempt.startedAtTime, end:  .generated.attempt.endedAtTime, class: .group.name}]'  >  your_new_file.json
+
+Get all events, concatenate event type and action fields
+// cat  pr_extract_no_jtriz.jsonl | jq  -s  '[.[] | {action:((."@type" |(.[37:]) ) + "_" + (.action |(.[50:]))), problem_set: .object.isPartOf.name, problem: .object.name, answerCorrect: .generated.extensions.isStudentAnswerCorrect, time: .generated.attempt.duration, actor: .actor.name, start: .generated.attempt.startedAtTime, end:  .generated.attempt.endedAtTime, class: .group.name}]' > all.json
+
+Same as above, no start and end, but add eventTime
+// cat  pr_extract_no_jtriz.jsonl | jq  -s  '[.[] | {action:((."@type" |(.[37:]) ) + "_" + (.action |(.[50:]))), problem_set: .object.isPartOf.name, problem: .object.name, answerCorrect: .generated.extensions.isStudentAnswerCorrect, duration: .generated.attempt.duration, actor: .actor.name, class: .group.name, time:.eventTime, value: .generated.value, correctAnswer: .generated.extensions.correctAnswer}]' > all.json
+
+Get all action#Completed events for a specific actor
+// cat  pr_extract.jsonl | jq  -s  '[.[] | select(.actor.name=="XXXXX") | select( .action=="http://purl.imsglobal.org/vocab/caliper/v1/action#Completed") |  {action: .action | (.[50:]), set: .object.isPartOf.name, answerCorrect: .generated.extensions.isStudentAnswerCorrect, time: .generated.attempt.duration, actor: .actor.name}]'> actorCompleted.json
+
+Get all events from a specific actor, without the slurping (no -s) option
+// cat   pr_extract.jsonl | jq -nc '[inputs | select(.actor.name=="XXXXX") |  {action: .action | (.[50:]), set: .object.isPartOf.name, answerCorrect: .generated.extensions.isStudentAnswerCorrect, time: .generated.attempt.duration, actor: .actor.name}]' > input_lalala.json
