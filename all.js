@@ -15,6 +15,8 @@ $.getJSON('all_anon_compacted.json', {})
       }];
 
 
+
+
       var actions = _.pluck(data, 'action');
       var actions_uniq = _.uniq(_.pluck(data, 'action'));
 
@@ -45,15 +47,25 @@ $.getJSON('all_anon_compacted.json', {})
       });
 
       _.each(data, function(item,i) {
+        // some events are not course related
+        // i.e. class=null
+        var theClass='';
+        if(item.class !==null){
+          theClass=item.class;
+        } else {
+          theClass='Not course related';
+        }
+
         var theKey = _.findWhere(grouped_data, {key: item.action});
-        var theItem = _.findWhere(theKey.values, {x: item.class});
+
+        var theItem = _.findWhere(theKey.values, {x: theClass});
 
         if(theItem) {
           theItem.y = theItem.y + 1;
         }
         else {
           theKey.values.push({
-            x:item.class,
+            x:theClass,
             y:0,
             series:item.action
           });
@@ -70,8 +82,10 @@ $.getJSON('all_anon_compacted.json', {})
             .showControls(false)   //Allow user to switch between 'Grouped' and 'Stacked' mode.
             .groupSpacing(0.1)    //Distance between each group of bars.
           ;
-          chart.yAxis
-              .tickFormat(d3.format(',.1f'));
+
+            chart.yAxis.tickFormat(function(d, i) {
+              return Math.round(d);
+            });
 
           d3.select('#chart svg')
               .datum(grouped_data)
