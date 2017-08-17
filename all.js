@@ -25,6 +25,7 @@ $.getJSON('all_anon_compacted.json', {})
         };
       });
       bar_chart[0].values = result;
+
       updateBarChart();
     });
 
@@ -38,6 +39,7 @@ $.getJSON('all_anon_compacted.json', {})
           values:[]
         });
       });
+
 
       _.each(data, function(item,i) {
         // some events are not course related
@@ -64,8 +66,6 @@ $.getJSON('all_anon_compacted.json', {})
       _.each(grouped_data, function(item, i){
         item.values = _.sortBy(item.values, 'x');
       });
-
-      console.log(grouped_data);
 
       updatedMultiBarChart(grouped_data);
     });
@@ -117,7 +117,43 @@ $.getJSON('all_anon_compacted.json', {})
       updatedMultiBarChart(grouped_data);
     });
 
+    $('#itemsStartedFinished').on('click', function(e) {
 
+      var filtered_data = _.filter(data, function(item) {
+        return (item.action === 'AssessmentItemEvent_Completed' || item.action === 'AssessmentItemEvent_Started');
+      });
+
+      bar_chart = [{
+        values: []
+      }];
+      var grouped_data = [];
+      var courses_uniq = _.uniq(_.pluck(filtered_data, 'class'));
+
+      _.each(courses_uniq, function(course,i){
+        grouped_data.push({
+          id:course,
+          started:0,
+          completed:0,
+          count:0
+        });
+      });
+
+      _.each(filtered_data, function(item,i) {
+        var theItem = _.findWhere(grouped_data, {id: item.class});
+        if(item.action === 'AssessmentItemEvent_Completed'){
+          theItem.completed = theItem.completed + 1;
+        } else {
+          theItem.started = theItem.started + 1;
+        }
+      });
+
+      _.each(grouped_data, function(item,i) {
+        item.count = item.completed/item.started * 100;
+      });
+
+      bar_chart[0].values = grouped_data;
+      updateBarChart();
+    });
 
     $('#actions').trigger("click");
 
