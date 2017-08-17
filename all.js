@@ -151,7 +151,7 @@ $.getJSON('all_anon_compacted.json', {})
         item.count = item.completed/item.started * 100;
       });
 
-      bar_chart[0].values = grouped_data;
+      bar_chart[0].values = _.sortBy(grouped_data, 'id');
       updateBarChart();
     });
 
