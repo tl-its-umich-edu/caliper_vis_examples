@@ -1,13 +1,11 @@
 $.getJSON('all_anon_compacted.json', {})
   .done(function(data) {
-
     $('.btn').on('click', function(e){
       $(".btn-group button").each(function() {
         $(this).attr('disabled',false).attr('class','btn-default btn');
       });
       $(this).attr('disabled',true).attr('class','btn-primary btn');
     });
-
     $('#actions').on('click', function(e) {
 
       bar_chart = [{
@@ -28,11 +26,11 @@ $.getJSON('all_anon_compacted.json', {})
 
       updateBarChart();
     });
-
     $('#allEventsByClass').on('click', function(e) {
       d3.selectAll("svg > *").remove();
       var grouped_data = [];
       var actions_uniq = _.uniq(_.pluck(data, 'action'));
+      console.log(actions_uniq);
       _.each(actions_uniq, function(action,i){
         grouped_data.push({
           key:action,
@@ -69,8 +67,6 @@ $.getJSON('all_anon_compacted.json', {})
 
       updatedMultiBarChart(grouped_data);
     });
-
-
     $('#assigItemsOnly').on('click', function(e) {
       d3.selectAll("svg > *").remove();
       var filtered_data = _.filter(data, function(item) {
@@ -116,7 +112,6 @@ $.getJSON('all_anon_compacted.json', {})
 
       updatedMultiBarChart(grouped_data);
     });
-
     $('#itemsStartedFinished').on('click', function(e) {
 
       var filtered_data = _.filter(data, function(item) {
@@ -154,10 +149,47 @@ $.getJSON('all_anon_compacted.json', {})
       bar_chart[0].values = _.sortBy(grouped_data, 'id');
       updateBarChart();
     });
+    $('#assesmStartedFinished').on('click', function(e) {
 
+      var filtered_data = _.filter(data, function(item) {
+        return (item.action === 'AssessmentEvent_Started' || item.action === 'AssessmentEvent_Submitted');
+      });
+
+      bar_chart = [{
+        values: []
+      }];
+
+      var grouped_data = [];
+      var courses_uniq = _.uniq(_.pluck(filtered_data, 'class'));
+
+      _.each(courses_uniq, function(course,i){
+        grouped_data.push({
+          id:course,
+          started:0,
+          completed:0,
+          count:0
+        });
+      });
+
+      _.each(filtered_data, function(item,i) {
+        var theItem = _.findWhere(grouped_data, {id: item.class});
+        if(item.action === 'AssessmentEvent_Submitted'){
+          theItem.completed = theItem.completed + 1;
+        } else {
+          theItem.started = theItem.started + 1;
+        }
+      });
+
+      _.each(grouped_data, function(item,i) {
+        item.count = item.completed/item.started * 100;
+      });
+
+      bar_chart[0].values = _.sortBy(grouped_data, 'id');
+      updateBarChart();
+    });
     $('#actions').trigger("click");
 
-    // different visualizations
+    // different visualizations used by the data as reconfigured by above
 
     function updatedMultiBarChart(grouped_data){
       d3.selectAll("svg > *").remove();
@@ -213,5 +245,4 @@ $.getJSON('all_anon_compacted.json', {})
         return chart;
       });
     }
-
   });
