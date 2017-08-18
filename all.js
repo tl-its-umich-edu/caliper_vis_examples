@@ -1,13 +1,14 @@
+/// add most skipped, completed, etc (maybe top x, bottom x).
+
 $.getJSON('all_anon_compacted.json', {})
   .done(function(data) {
-    $('.btn').on('click', function(e){
-      $(".btn-group button").each(function() {
-        $(this).attr('disabled',false).attr('class','btn-default btn');
-      });
-      $(this).attr('disabled',true).attr('class','btn-primary btn');
-    });
+    // $('.btn').on('click', function(e){
+    //   $(".btn-group button").each(function() {
+    //     $(this).attr('disabled',false).attr('class','btn-default btn');
+    //   });
+    //   $(this).attr('disabled',true).attr('class','btn-primary btn');
+    // });
     $('#actions').on('click', function(e) {
-
       bar_chart = [{
         values: []
       }];
@@ -23,14 +24,12 @@ $.getJSON('all_anon_compacted.json', {})
         };
       });
       bar_chart[0].values = result;
-
       updateBarChart();
     });
     $('#allEventsByClass').on('click', function(e) {
       d3.selectAll("svg > *").remove();
       var grouped_data = [];
       var actions_uniq = _.uniq(_.pluck(data, 'action'));
-      console.log(actions_uniq);
       _.each(actions_uniq, function(action,i){
         grouped_data.push({
           key:action,
@@ -123,7 +122,7 @@ $.getJSON('all_anon_compacted.json', {})
       }];
       var grouped_data = [];
       var courses_uniq = _.uniq(_.pluck(filtered_data, 'class'));
-
+      //console.log(courses_uniq);
       _.each(courses_uniq, function(course,i){
         grouped_data.push({
           id:course,
@@ -187,6 +186,8 @@ $.getJSON('all_anon_compacted.json', {})
       bar_chart[0].values = _.sortBy(grouped_data, 'id');
       updateBarChart();
     });
+
+    // start of the initial visualization
     $('#actions').trigger("click");
 
     // different visualizations used by the data as reconfigured by above

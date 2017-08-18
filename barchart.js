@@ -13,19 +13,20 @@ $.getJSON('raw.json', {})
     raw = data;
     $('#user_counts').trigger("click");
   });
-
+filter_val=null;
 var userCounts = [];
 var timeCalc = false;
 
-$('.btn').on('click', function(e){
-  $(".btn-group button").each(function() {
-    $(this).attr('disabled',false).attr('class','btn-default btn');
-  });
-  $(this).attr('disabled',true).attr('class','btn-primary btn');
-});
+// $('.btn').on('click', function(e){
+//   $(".btn-group button").each(function() {
+//     $(this).attr('disabled',false).attr('class','btn-default btn');
+//   });
+//   $(this).attr('disabled',true).attr('class','btn-primary btn');
+// });
 
 
 $('#user_time_spent').on('click', function(e) {
+  $('#courseFilter').hide();
   mode = 'time';
   $('#headLine').text('Average time spent on item by student');
   $('#code').text('x: students, y: average time per question');
@@ -68,6 +69,7 @@ $('#user_time_spent').on('click', function(e) {
 
 
 $('#user_correct').on('click', function(e) {
+  $('#courseFilter').hide();
   mode = 'percent';
   $('#headLine').text('Percent correct answers by student');
   $('#code').text('x: students, y: % correct');
@@ -101,12 +103,23 @@ $('#user_correct').on('click', function(e) {
 });
 
 $('#user_counts').on('click', function(e) {
+
+
+
+  $('#courseFilter').show();
   mode = 'num';
   historicalBarChart[0].values = [];
   userCounts = [];
   $('#headLine').text('Questions answered by student');
   $('#code').text('x: students, y: questions answered');
-  _.each(raw, function(item) {
+  if(filter_val){
+    new_raw = _.where(raw, {class: filter_val});
+  } else {
+    new_raw = raw;
+  }
+
+
+  _.each(new_raw, function(item) {
     var corr = _.findWhere(historicalBarChart[0].values, {
       label: item.actor
     });
@@ -136,6 +149,7 @@ $('#user_counts').on('click', function(e) {
 
 
 $('#pop_sets').on('click', function(e) {
+  $('#courseFilter').hide();
   mode = 'num';
   historicalBarChart[0].values = [];
   //userCounts = [];
@@ -159,6 +173,7 @@ $('#pop_sets').on('click', function(e) {
 
 
 $('#inc_sets').on('click', function(e) {
+  $('#courseFilter').hide();
   mode = 'percent';
   historicalBarChart[0].values = [];
   $('#headLine').text('Incorrect per set');
@@ -204,6 +219,7 @@ $('#inc_sets').on('click', function(e) {
 });
 
 $('#totals_course').on('click', function(e) {
+  $('#courseFilter').hide();
   mode = 'num';
   historicalBarChart[0].values = [];
   $('#headLine').text('Course total answers');
@@ -226,6 +242,7 @@ $('#totals_course').on('click', function(e) {
 
 
 $('#corr_sets').on('click', function(e) {
+  $('#courseFilter').hide();
   mode = 'percent';
   historicalBarChart[0].values = [];
   //userCounts = [];
@@ -270,6 +287,12 @@ $('#corr_sets').on('click', function(e) {
   update();
 });
 
+
+$('#applyFilter').on('click', function(){
+  filter_val = $('#filter  option:selected').text();
+  $('#user_counts').trigger("click");
+  //console.log(filter_val);
+});
 
 
 function update() {
