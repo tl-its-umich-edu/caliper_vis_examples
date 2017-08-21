@@ -2,12 +2,12 @@
 // cat your_raw_file.jsonl | jq  -s  '[.[] | select(.action=="http://purl.imsglobal.org/vocab/caliper/v1/action#Completed") |  {problem_set: .object.isPartOf.name, problem: .object.name, answerCorrect: .generated.extensions.isStudentAnswerCorrect, time: .generated.attempt.duration, actor: .actor.name, start: .generated.attempt.startedAtTime, end:  .generated.attempt.endedAtTime, class: .group.name}]'  >  your_new_file.json
 
 
-historicalBarChart = [{
+var historicalBarChart = [{
   values: []
 }];
 var raw = [];
 var mode = 'num';
-var courses =[];
+var courses = [];
 $.getJSON('raw.json', {})
   .done(function(data) {
     raw = data;
@@ -232,8 +232,6 @@ $('#totals_course').on('click', function(e) {
   historicalBarChart[0].values = [];
   $('#headLine').text('Course total answers');
   $('#code').text('x: courses, y: questions answered');
-  //var courses = _.uniq(_.map(raw, function(item){ return  item.class; }));
-  console.log(courses);
   var coursesSorted = _.sortBy(courses, function(course) {
     return course;
   });
