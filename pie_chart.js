@@ -52,9 +52,9 @@ $.getJSON('raw.json', {})
 
         $('input[type=radio]').change(function() {
           if(this.value ==='tenmost'){
-            problem_sets = _.first(_.sortBy(problem_sets, 'value').reverse(), 10);
+            problem_sets = _.first(_.sortBy(problem_sets_core, 'value').reverse(), 10);
           } else if (this.value ==='tenleast'){
-            problem_sets = _.first(_.sortBy(problem_sets, 'value'), 10);
+            problem_sets = _.first(_.sortBy(problem_sets_core, 'value'), 10);
           } else {
             problem_sets = problem_sets_core;
           }
