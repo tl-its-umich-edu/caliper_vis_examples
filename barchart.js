@@ -7,15 +7,22 @@ historicalBarChart = [{
 }];
 var raw = [];
 var mode = 'num';
-
+var courses =[];
 $.getJSON('raw.json', {})
   .done(function(data) {
     raw = data;
+    courses= _.uniq(_.map(raw, function(item){ return  item.class; }));
+    $.each(courses, function(key, value) {
+       $('#filter').append($("<option></option>").attr("value",value).text(value));
+    });
     $('#user_counts').trigger("click");
   });
+
 filter_val=null;
 var userCounts = [];
 var timeCalc = false;
+
+
 
 // $('.btn').on('click', function(e){
 //   $(".btn-group button").each(function() {
@@ -225,7 +232,8 @@ $('#totals_course').on('click', function(e) {
   historicalBarChart[0].values = [];
   $('#headLine').text('Course total answers');
   $('#code').text('x: courses, y: questions answered');
-  var courses = _.uniq(_.map(raw, function(item){ return  item.class; }));
+  //var courses = _.uniq(_.map(raw, function(item){ return  item.class; }));
+  console.log(courses);
   var coursesSorted = _.sortBy(courses, function(course) {
     return course;
   });
