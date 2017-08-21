@@ -112,7 +112,8 @@ $('#user_counts').on('click', function(e) {
   userCounts = [];
   $('#headLine').text('Questions answered by student');
   $('#code').text('x: students, y: questions answered');
-  if(filter_val){
+
+  if(filter_val !==null && filter_val !=='All'){
     new_raw = _.where(raw, {class: filter_val});
   } else {
     new_raw = raw;
