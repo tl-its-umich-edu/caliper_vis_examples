@@ -31,6 +31,14 @@
 
 <body class="container-fluid">
   <h3>Pie chart <small> -  percent of questions answered from each problem set</small></h3>
+  <p>
+    <input type="radio" name="slice" value="all" id="all">
+    <label for="all">All</label>
+    <input type="radio" name="slice" value="tenmost" id="tenmost">
+    <label for="tenmost">Ten most used</label>
+    <input type="radio" name="slice" value="tenleast" id="tenleast">
+    <label for="tenleast">Ten least used</label>
+  </p>
   <div id="chart">
     <svg></svg>
   </div>
