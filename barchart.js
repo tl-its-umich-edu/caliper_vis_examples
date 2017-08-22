@@ -32,128 +32,127 @@ var timeCalc = false;
 // });
 
 
-$('#user_time_spent').on('click', function(e) {
-  $('#courseFilter').hide();
-  mode = 'time';
-  $('#headLine').text('Average time spent on item by student');
-  $('#code').text('x: students, y: average time per question');
-  historicalBarChart[0].values = [];
-
-  _.each(raw, function(item, i) {
-    if (!timeCalc) {
-      var duration = raw[i].time;
-      raw[i].time = moment.duration(duration, moment.ISO_8601).asSeconds();
-    }
-    var corr = _.findWhere(historicalBarChart[0].values, {
-      label: item.actor
-    });
-
-    if (corr) {
-      corr.value = corr.value + item.time;
-    } else {
-      historicalBarChart[0].values.push({
-        label: item.actor,
-        value: item.time
-      });
-    }
-  });
-
-  _.each(historicalBarChart[0].values, function(item, i) {
-    timeCalc = true;
-    var corr = _.findWhere(userCounts, {
-      label: item.label
-    });
-    if (corr) {
-      historicalBarChart[0].values[i].value = Math.round(item.value / corr.value);
-    }
-  });
-
-
-  update();
-});
-
+// $('#user_time_spent').on('click', function(e) {
+//   $('#courseFilter').hide();
+//   mode = 'time';
+//   $('#headLine').text('Average time spent on item by student');
+//   $('#code').text('x: students, y: average time per question');
+//   historicalBarChart[0].values = [];
+//
+//   _.each(raw, function(item, i) {
+//     if (!timeCalc) {
+//       var duration = raw[i].time;
+//       raw[i].time = moment.duration(duration, moment.ISO_8601).asSeconds();
+//     }
+//     var corr = _.findWhere(historicalBarChart[0].values, {
+//       label: item.actor
+//     });
+//     if (corr) {
+//       corr.value = corr.value + item.time;
+//     } else {
+//       historicalBarChart[0].values.push({
+//         label: item.actor,
+//         value: item.time
+//       });
+//     }
+//   });
+//
+//   _.each(historicalBarChart[0].values, function(item, i) {
+//     timeCalc = true;
+//     var corr = _.findWhere(userCounts, {
+//       label: item.label
+//     });
+//     if (corr) {
+//       historicalBarChart[0].values[i].value = Math.round(item.value / corr.value);
+//     }
+//   });
+//
+//
+//   update();
+// });
 
 
 
-$('#user_correct').on('click', function(e) {
-  $('#courseFilter').hide();
-  mode = 'percent';
-  $('#headLine').text('Percent correct answers by student');
-  $('#code').text('x: students, y: % correct');
-  historicalBarChart[0].values = [];
-  _.each(raw, function(item) {
-    if (item.answerCorrect === 'true') {
-      var corr = _.findWhere(historicalBarChart[0].values, {
-        label: item.actor
-      });
-      if (corr) {
-        corr.value = corr.value + 1;
-      } else {
-        historicalBarChart[0].values.push({
-          label: item.actor,
-          value: 1
-        });
-      }
-    }
-  });
+//
+// $('#user_correct').on('click', function(e) {
+//   $('#courseFilter').hide();
+//   mode = 'percent';
+//   $('#headLine').text('Percent correct answers by student');
+//   $('#code').text('x: students, y: % correct');
+//   historicalBarChart[0].values = [];
+//   _.each(raw, function(item) {
+//     if (item.answerCorrect === 'true') {
+//       var corr = _.findWhere(historicalBarChart[0].values, {
+//         label: item.actor
+//       });
+//       if (corr) {
+//         corr.value = corr.value + 1;
+//       } else {
+//         historicalBarChart[0].values.push({
+//           label: item.actor,
+//           value: 1
+//         });
+//       }
+//     }
+//   });
+//
+//   _.each(historicalBarChart[0].values, function(item) {
+//
+//     var corr = _.findWhere(userCounts, {
+//       label: item.label
+//     });
+//     if (corr) {
+//       item.value = item.value / corr.value * 100;
+//     }
+//   });
+//   update();
+// });
 
-  _.each(historicalBarChart[0].values, function(item) {
-
-    var corr = _.findWhere(userCounts, {
-      label: item.label
-    });
-    if (corr) {
-      item.value = item.value / corr.value * 100;
-    }
-  });
-  update();
-});
-
-$('#user_counts').on('click', function(e) {
-
-
-
-  $('#courseFilter').show();
-  mode = 'num';
-  historicalBarChart[0].values = [];
-  userCounts = [];
-  $('#headLine').text('Questions answered by student');
-  $('#code').text('x: students, y: questions answered');
-
-  if(filter_val !==null && filter_val !=='All'){
-    new_raw = _.where(raw, {class: filter_val});
-  } else {
-    new_raw = raw;
-  }
-
-
-  _.each(new_raw, function(item) {
-    var corr = _.findWhere(historicalBarChart[0].values, {
-      label: item.actor
-    });
-    var corrCountIndx = _.findIndex(userCounts, {
-      label: item.actor
-    });
-    if (corr) {
-      corr.value = corr.value + 1;
-    } else {
-      historicalBarChart[0].values.push({
-        label: item.actor,
-        value: 1
-      });
-    }
-
-    if (corrCountIndx !== -1) {
-      userCounts[corrCountIndx].value = userCounts[corrCountIndx].value + 1;
-    } else {
-      userCounts.push({
-        label: item.actor,
-        value: 1
-      });
-    }
-  });
-  update();
-});
+// $('#user_counts').on('click', function(e) {
+//
+//
+//
+// //   $('#courseFilter').show();
+// //   mode = 'num';
+// //   historicalBarChart[0].values = [];
+// //   userCounts = [];
+// //   $('#headLine').text('Questions answered by student');
+// //   $('#code').text('x: students, y: questions answered');
+// //
+// //   if(filter_val !==null && filter_val !=='All'){
+// //     new_raw = _.where(raw, {class: filter_val});
+// //   } else {
+// //     new_raw = raw;
+// //   }
+// //
+// //
+// //   _.each(new_raw, function(item) {
+// //     var corr = _.findWhere(historicalBarChart[0].values, {
+// //       label: item.actor
+// //     });
+// //     var corrCountIndx = _.findIndex(userCounts, {
+// //       label: item.actor
+// //     });
+// //     if (corr) {
+// //       corr.value = corr.value + 1;
+// //     } else {
+// //       historicalBarChart[0].values.push({
+// //         label: item.actor,
+// //         value: 1
+// //       });
+// //     }
+// //
+// //     if (corrCountIndx !== -1) {
+// //       userCounts[corrCountIndx].value = userCounts[corrCountIndx].value + 1;
+// //     } else {
+// //       userCounts.push({
+// //         label: item.actor,
+// //         value: 1
+// //       });
+// //     }
+// //   });
+// //   update();
+// // });
 
 
 $('#pop_sets').on('click', function(e) {

@@ -4,8 +4,8 @@
 <head>
   <title>Various measures</title>
   <meta charset="utf-8">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.5/nv.d3.css" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link href="bower_components/nvd3/build/nv.d3.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
   <style>
@@ -35,12 +35,12 @@
   </style>
 </head>
 
-<body class="container-fluid">
+<body class="container-fluid" ng-app="visApp"  ng-controller="c1">
   <br>
   <div class="btn-group btn-group-sm">
-    <button class="btn-default btn" id="user_counts">Users and counts</button>
-    <button class="btn-default btn" id="user_correct">% correct</button>
-    <button class="btn btn-default"id="user_time_spent">Average time spent</button>
+    <button class="btn-default btn" id="user_counts" ng-click="userCounts()">Users and counts</button>
+    <button class="btn-default btn" id="user_correct" ng-click="userCorrect()">% correct</button>
+    <button class="btn btn-default"id="user_time_spent" ng-click="timeSpent()">Average time spent</button>
     <button class="btn btn-default"id="pop_sets">Set use</button>
     <button class="btn btn-default"id="inc_sets">Incorrect per set</button>
     <button class="btn btn-default"id="corr_sets">Correct per set</button>
@@ -56,16 +56,30 @@
     </select>
     <button type="button" id="applyFilter" class="btn btn-default btn-xs">Go</button>
   </div>
-  <div id="chart1">
-    <svg></svg>
+
+  <div>
+      <div>
+          <nvd3 options="options" data="data"></nvd3>
+      </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js" charset="utf-8"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.5/nv.d3.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
-  </script>
+
+<!-- <div id="chart1">
+    <svg></svg>
+  </div> -->
+
+  <script src="bower_components/underscore/underscore-min.js"></script>
+
+
+  <script src="bower_components/moment/min/moment.min.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+  <script src="bower_components/nvd3/build/nv.d3.min.js"></script>
+  <script src="bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/factories.js"></script>
   <script src="barchart.js"></script>
 
 </body>
