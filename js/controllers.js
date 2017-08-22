@@ -23,10 +23,18 @@ visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
       yAxis: {
         axisLabel: 'Questions Answered',
         axisLabelDistance: -10,
-        tickFormat: function(d){
+        tickFormat: function(d) {
           return d;
         }
       }
+    },
+    title: {
+      enable: true,
+      text: 'Answers by students'
+    },
+    subtitle: {
+      enable: true,
+      html: '<code>x: students, y: total answers</code>'
     }
   };
   $scope.data = [];
@@ -38,25 +46,52 @@ visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
 
   $scope.userCorrect = function() {
     $scope.options.chart.yAxis.axisLabel = '% correct';
-    $scope.options.chart.yAxis.tickFormat= function(d){
-        return d +  ' %' ;
+    $scope.options.title = {
+      enable: true,
+      text: 'Percent correct by student'
+    };
+    $scope.options.subtitle = {
+      enable: true,
+      html: '<code>x: students, y: total correct answers</code>'
+    };
+    $scope.options.chart.yAxis.tickFormat = function(d) {
+      return d + ' %';
     };
     $scope.data = transFormPercentCorrect($scope.raw);
   };
   $scope.userCounts = function() {
     $scope.options.chart.yAxis.axisLabel = 'Questions Answered';
-    $scope.options.chart.yAxis.tickFormat= function(d){
-        return d;
+    $scope.options.chart.yAxis.tickFormat = function(d) {
+      return d;
     };
+    $scope.options.title = {
+      enable: true,
+      text: 'Answers by student'
+    };
+    $scope.options.subtitle = {
+      enable: true,
+      html: '<code>x: students, y: total answers</code>'
+    };
+
     $scope.data = transFormUserCounts($scope.raw);
   };
-  $scope.timeSpent = function(){
+  $scope.timeSpent = function() {
     $scope.options.chart.yAxis.axisLabel = 'Average Time Spent';
-    $scope.options.chart.yAxis.tickFormat= function(d){
-        return d +  ' s' ;
+    $scope.options.chart.yAxis.tickFormat = function(d) {
+      return d + ' s';
     };
+    $scope.options.title = {
+      enable: true,
+      text: 'Average time spent on answers by  student'
+    };
+    $scope.options.subtitle = {
+            enable: true,
+            html: '<code>x: students, y: average time spent on question</code>'
+        };
+
+
     $scope.data = transFormTimeSpent($scope.raw);
-  }
+  };
 }]);
 
 
@@ -129,14 +164,14 @@ var transFormTimeSpent = function(data) {
       returnData[0].values.push({
         label: item.actor,
         value: thisTime,
-        total:1
+        total: 1
       });
     }
   });
 
   _.each(returnData[0].values, function(item, i) {
-      returnData[0].values[i].value = Math.round(item.value / item.total);
-      delete returnData[0].values[i].total;
+    returnData[0].values[i].value = Math.round(item.value / item.total);
+    delete returnData[0].values[i].total;
   });
 
   return returnData;
