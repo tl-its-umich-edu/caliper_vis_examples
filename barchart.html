@@ -26,10 +26,10 @@
       height: 100%;
       width: 100%;
     }
-    svg{
+    .nvd3-svg{
       height:60% !important;
       margin: 0 0 50px 0 !important;
-      padding: 0 0 100px 0 !important;
+      padding: 0 0 300px 0 !important;
       box-sizing: content-box;
     }
   </style>
@@ -40,11 +40,11 @@
   <div class="btn-group btn-group-sm">
     <button class="btn-default btn" id="user_counts" ng-click="userCounts()">Users and counts</button>
     <button class="btn-default btn" id="user_correct" ng-click="userCorrect()">% correct</button>
-    <button class="btn btn-default"id="user_time_spent" ng-click="timeSpent()">Average time spent</button>
-    <button class="btn btn-default"id="pop_sets">Set use</button>
-    <button class="btn btn-default"id="inc_sets">Incorrect per set</button>
-    <button class="btn btn-default"id="corr_sets">Correct per set</button>
-    <button class="btn btn-default"id="totals_course">Course use</button>
+    <button class="btn btn-default" id="user_time_spent" ng-click="timeSpent()">Average time spent</button>
+    <button class="btn btn-default" id="pop_sets" ng-click="setUse()">Set use</button>
+    <button class="btn btn-default" id="inc_sets" ng-click="incorrectPerSet()">Incorrect per set</button>
+    <button class="btn btn-default" id="corr_sets" ng-click="correctPerSet()">Correct per set</button>
+    <button class="btn btn-default" id="totals_course" ng-click="courseTotals()">Course use</button>
 
   </div>
 

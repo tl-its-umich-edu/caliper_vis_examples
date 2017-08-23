@@ -154,144 +154,145 @@ var timeCalc = false;
 // //   update();
 // // });
 
-
-$('#pop_sets').on('click', function(e) {
-  $('#courseFilter').hide();
-  mode = 'num';
-  historicalBarChart[0].values = [];
-  //userCounts = [];
-  $('#headLine').text('Popular sets');
-  $('#code').text('x: problem sets, y:questions answered');
-  _.each(raw, function(item) {
-    var corr = _.findWhere(historicalBarChart[0].values, {
-      label: item.problem_set
-    });
-    if (corr) {
-      corr.value = corr.value + 1;
-    } else {
-      historicalBarChart[0].values.push({
-        label: item.problem_set,
-        value: 1
-      });
-    }
-  });
-  update();
-});
-
-
-$('#inc_sets').on('click', function(e) {
-  $('#courseFilter').hide();
-  mode = 'percent';
-  historicalBarChart[0].values = [];
-  $('#headLine').text('Incorrect per set');
-  $('#code').text('x: problem sets, y: % questions answered incorrectly');
-
-  var sets = _.uniq(_.pluck(raw,'problem_set'));
-
-  var set_objects = [];
-
-  _.each(sets, function(set_item){
-    set_objects.push({set:set_item,count:0});
-  });
+  //
+  // $('#pop_sets').on('click', function(e) {
+  //   $('#courseFilter').hide();
+  //   mode = 'num';
+  //   historicalBarChart[0].values = [];
+  //   //userCounts = [];
+  //   $('#headLine').text('Popular sets');
+  //   $('#code').text('x: problem sets, y:questions answered');
+  //   _.each(raw, function(item) {
+  //     var corr = _.findWhere(historicalBarChart[0].values, {
+  //       label: item.problem_set
+  //     });
+  //     if (corr) {
+  //       corr.value = corr.value + 1;
+  //     } else {
+  //       historicalBarChart[0].values.push({
+  //         label: item.problem_set,
+  //         value: 1
+  //       });
+  //     }
+  //   });
+  //   update();
+  // });
 
 
-  _.each(raw, function(item) {
-    var corr_count = _.findWhere(set_objects, {
-      set: item.problem_set
-    });
-    corr_count.count=corr_count.count +1;
-    var corr = _.findWhere(historicalBarChart[0].values, {
-      label: item.problem_set
-    });
-    if (corr) {
-      if (item.answerCorrect !=='true'){
-        corr.value = corr.value + 1;
-      }
-    } else {
-      historicalBarChart[0].values.push({
-        label: item.problem_set,
-        value: item.answerCorrect!=='true'?1:0
-      });
-    }
-  });
-
-  _.each(historicalBarChart[0].values, function(item){
-    var corr_count = _.findWhere(set_objects, {
-      set: item.label
-    });
-    item.value = item.value/corr_count.count * 100;
-  });
-
-  update();
-});
-
-$('#totals_course').on('click', function(e) {
-  $('#courseFilter').hide();
-  mode = 'num';
-  historicalBarChart[0].values = [];
-  $('#headLine').text('Course total answers');
-  $('#code').text('x: courses, y: questions answered');
-  var coursesSorted = _.sortBy(courses, function(course) {
-    return course;
-  });
-  var coursesObject = _.map(coursesSorted, function(course, i){ return  {'label':course, 'value':0}; });
-
-  _.each(raw, function(item) {
-    var thisCourseIndex = _.indexOf(coursesSorted, item.class);
-    if(thisCourseIndex !==-1){
-      coursesObject[thisCourseIndex].value= coursesObject[thisCourseIndex].value + 1;
-    }
-  });
-  historicalBarChart[0].values = coursesObject;
-  update();
-});
-
-
-$('#corr_sets').on('click', function(e) {
-  $('#courseFilter').hide();
-  mode = 'percent';
-  historicalBarChart[0].values = [];
-  //userCounts = [];
-  $('#headLine').text('Incorrect per set');
-  $('#code').text('x: problem sets, y: % questions answered correctly');
-  var sets = _.uniq(_.pluck(raw,'problem_set'));
-
-  var set_objects = [];
-
-  _.each(sets, function(set_item){
-    set_objects.push({set:set_item,count:0});
-  });
-
-
-  _.each(raw, function(item) {
-    var corr_count = _.findWhere(set_objects, {
-      set: item.problem_set
-    });
-    corr_count.count=corr_count.count +1;
-    var corr = _.findWhere(historicalBarChart[0].values, {
-      label: item.problem_set
-    });
-    if (corr) {
-      if (item.answerCorrect ==='true'){
-        corr.value = corr.value + 1;
-      }
-    } else {
-      historicalBarChart[0].values.push({
-        label: item.problem_set,
-        value: item.answerCorrect==='true'?1:0
-      });
-    }
-  });
-
-  _.each(historicalBarChart[0].values, function(item){
-    var corr_count = _.findWhere(set_objects, {
-      set: item.label
-    });
-    item.value = item.value/corr_count.count * 100;
-  });
-
-  update();
-});
+// $('#inc_sets').on('click', function(e) {
+//   $('#courseFilter').hide();
+//   mode = 'percent';
+//   historicalBarChart[0].values = [];
+//   $('#headLine').text('Incorrect per set');
+//   $('#code').text('x: problem sets, y: % questions answered incorrectly');
+//
+//   var sets = _.uniq(_.pluck(raw,'problem_set'));
+//
+//   var set_objects = [];
+//
+//   _.each(sets, function(set_item){
+//     set_objects.push({set:set_item,count:0});
+//   });
+//
+//
+//   _.each(raw, function(item) {
+//     var corr_count = _.findWhere(set_objects, {
+//       set: item.problem_set
+//     });
+//     corr_count.count=corr_count.count +1;
+//     var corr = _.findWhere(historicalBarChart[0].values, {
+//       label: item.problem_set
+//     });
+//     if (corr) {
+//       if (item.answerCorrect !=='true'){
+//         corr.value = corr.value + 1;
+//       }
+//     } else {
+//       historicalBarChart[0].values.push({
+//         label: item.problem_set,
+//         value: item.answerCorrect!=='true'?1:0
+//       });
+//     }
+//   });
+//
+//   _.each(historicalBarChart[0].values, function(item){
+//     var corr_count = _.findWhere(set_objects, {
+//       set: item.label
+//     });
+//     item.value = item.value/corr_count.count * 100;
+//   });
+//
+//   update();
+// });
+//
+// $('#totals_course').on('click', function(e) {
+//   $('#courseFilter').hide();
+//   mode = 'num';
+//   historicalBarChart[0].values = [];
+//   $('#headLine').text('Course total answers');
+//   $('#code').text('x: courses, y: questions answered');
+//   var coursesSorted = _.sortBy(courses, function(course) {
+//     return course;
+//   });
+//   console.log();
+//   var coursesObject = _.map(coursesSorted, function(course, i){ return  {'label':course, 'value':0}; });
+//
+//   _.each(raw, function(item) {
+//     var thisCourseIndex = _.indexOf(coursesSorted, item.class);
+//     if(thisCourseIndex !==-1){
+//       coursesObject[thisCourseIndex].value= coursesObject[thisCourseIndex].value + 1;
+//     }
+//   });
+//   historicalBarChart[0].values = coursesObject;
+//   update();
+// });
+//
+//
+// $('#corr_sets').on('click', function(e) {
+//   $('#courseFilter').hide();
+//   mode = 'percent';
+//   historicalBarChart[0].values = [];
+//   //userCounts = [];
+//   $('#headLine').text('Incorrect per set');
+//   $('#code').text('x: problem sets, y: % questions answered correctly');
+//   var sets = _.uniq(_.pluck(raw,'problem_set'));
+//
+//   var set_objects = [];
+//
+//   _.each(sets, function(set_item){
+//     set_objects.push({set:set_item,count:0});
+//   });
+//
+//
+//   _.each(raw, function(item) {
+//     var corr_count = _.findWhere(set_objects, {
+//       set: item.problem_set
+//     });
+//     corr_count.count=corr_count.count +1;
+//     var corr = _.findWhere(historicalBarChart[0].values, {
+//       label: item.problem_set
+//     });
+//     if (corr) {
+//       if (item.answerCorrect ==='true'){
+//         corr.value = corr.value + 1;
+//       }
+//     } else {
+//       historicalBarChart[0].values.push({
+//         label: item.problem_set,
+//         value: item.answerCorrect==='true'?1:0
+//       });
+//     }
+//   });
+//
+//   _.each(historicalBarChart[0].values, function(item){
+//     var corr_count = _.findWhere(set_objects, {
+//       set: item.label
+//     });
+//     item.value = item.value/corr_count.count * 100;
+//   });
+//
+//   update();
+// });
 
 
 $('#applyFilter').on('click', function(){
