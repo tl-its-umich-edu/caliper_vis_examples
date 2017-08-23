@@ -10,12 +10,10 @@ $.getJSON('raw.json', {})
       return day;
     });
 
-    console.log(daysSorted);
-
     var daysObject = _.map(daysSorted, function(day, i){ return  {'label':day, 'value':0}; });
 
     _.each(raw, function(item) {
-      var thisDay = moment(item.end).format('dddd M/D');
+      var thisDay = moment(item.end).format('M/D');
       var thisDayIndex = _.indexOf(days, thisDay);
       if(thisDayIndex !==-1){
         daysObject[thisDayIndex].value= daysObject[thisDayIndex].value + 1;
