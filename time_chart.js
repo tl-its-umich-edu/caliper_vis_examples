@@ -3,10 +3,15 @@ var raw = [];
 $.getJSON('raw.json', {})
   .done(function(data) {
     raw = data;
-    var days = _.uniq(_.map(raw, function(item){ return  moment(item.end).format('dddd M/D'); }));
+    var days = _.uniq(_.map(raw, function(item){ return  moment(item.end).format('M/D'); }));
+
+
     var daysSorted = _.sortBy(days, function(day) {
       return day;
     });
+
+    console.log(daysSorted);
+
     var daysObject = _.map(daysSorted, function(day, i){ return  {'label':day, 'value':0}; });
 
     _.each(raw, function(item) {
