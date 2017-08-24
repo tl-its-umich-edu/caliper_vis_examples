@@ -49,6 +49,8 @@
   </div>
 
   <div>
+    <p><br><select ng-change="updateCourseFilter()" ng-model="courses_filter" ng-options="c as c for c in courses">
+    </select></p>
       <div>
           <nvd3 options="options" data="data"></nvd3>
       </div>
@@ -71,8 +73,6 @@
   <script src="js/app.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/factories.js"></script>
-  <script src="barchart.js"></script>
-
 </body>
 
 </html>

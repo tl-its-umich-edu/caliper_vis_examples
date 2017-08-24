@@ -1,4 +1,23 @@
-visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
+visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch) {
+  $scope.data = [];
+
+  Fetch.getData('raw.json').then(function(result) {
+    $scope.raw = result.data;
+    $scope.courses = _.uniq(
+      _.map(
+        $scope.raw,
+        function(item) {
+          return item.class;
+        }
+      )
+    );
+    $scope.courses.unshift('All Courses');
+    $scope.courses_filter = $scope.courses[0];
+    $scope.lastUsed = 'userCorrect';
+    $scope.data = transFormUserCounts(result.data, $scope.courses_filter);
+  });
+
+
   $scope.options = {
     chart: {
       type: 'discreteBarChart',
@@ -37,14 +56,37 @@ visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
       html: '<code>x: students, y: total answers</code>'
     }
   };
-  $scope.data = [];
 
-  Fetch.getData('raw.json').then(function(result) {
-    $scope.raw = result.data;
-    $scope.data = transFormUserCounts(result.data);
-  });
+  $scope.updateCourseFilter = function() {
+    $log.warn($scope.lastUsed + ' ' + $scope.courses_filter);
+    switch ($scope.lastUsed) {
+      case 'userCorrect':
+        $scope.userCorrect();
+        break;
+      case 'userCounts':
+        $scope.userCounts();
+        break;
+      case 'setUse':
+        $scope.setUse();
+        break;
+      case 'timeSpent':
+        $scope.timeSpent();
+        break;
+      case 'incorrectPerSet':
+        $scope.incorrectPerSet();
+        break;
+      case 'correctPerSet':
+        $scope.correctPerSet();
+        break;
+      case 'courseTotals':
+        $scope.courseTotals();
+        break;
+    }
+  };
+
 
   $scope.userCorrect = function() {
+    $scope.lastUsed = 'userCorrect';
     $scope.options.chart.yAxis.axisLabel = '% correct';
     $scope.options.chart.xAxis.axisLabel = 'Students';
     $scope.options.title = {
@@ -58,10 +100,11 @@ visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
     $scope.options.chart.yAxis.tickFormat = function(d) {
       return d + ' %';
     };
-    $scope.data = transFormPercentCorrect($scope.raw);
+    $scope.data = transFormPercentCorrect($scope.raw, $scope.courses_filter);
   };
 
   $scope.userCounts = function() {
+    $scope.lastUsed = 'userCounts';
     $scope.options.chart.yAxis.axisLabel = 'Questions Answered';
     $scope.options.chart.xAxis.axisLabel = 'Students';
     $scope.options.chart.yAxis.tickFormat = function(d) {
@@ -75,10 +118,11 @@ visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
       enable: true,
       html: '<code>x: students, y: total answers</code>'
     };
-    $scope.data = transFormUserCounts($scope.raw);
+    $scope.data = transFormUserCounts($scope.raw, $scope.courses_filter);
   };
 
   $scope.timeSpent = function() {
+    $scope.lastUsed = 'timeSpent';
     $scope.options.chart.yAxis.axisLabel = 'Average Time Spent';
     $scope.options.chart.xAxis.axisLabel = 'Students';
     $scope.options.chart.yAxis.tickFormat = function(d) {
@@ -92,10 +136,11 @@ visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
       enable: true,
       html: '<code>x: students, y: average time spent on question</code>'
     };
-    $scope.data = transFormTimeSpent($scope.raw);
+    $scope.data = transFormTimeSpent($scope.raw, $scope.courses_filter);
   };
 
   $scope.setUse = function() {
+    $scope.lastUsed = 'setUse';
     $scope.options.chart.yAxis.axisLabel = 'Questions answered';
     $scope.options.chart.xAxis.axisLabel = 'Sets';
     $scope.options.chart.xAxis.rotateLabels = -45;
@@ -110,10 +155,11 @@ visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
       enable: true,
       html: '<code>x: sets, y: number of questions completed</code>'
     };
-    $scope.data = transFormSetUse($scope.raw);
+    $scope.data = transFormSetUse($scope.raw, $scope.courses_filter);
   };
 
-  $scope.incorrectPerSet = function(){
+  $scope.incorrectPerSet = function() {
+    $scope.lastUsed = 'incorrectPerSet';
     $scope.options.chart.yAxis.axisLabel = 'Incorrect answers';
     $scope.options.chart.xAxis.axisLabel = 'Sets';
     $scope.options.chart.xAxis.rotateLabels = -45;
@@ -128,59 +174,65 @@ visApp.controller('c1', ['$scope', 'Fetch', function($scope, Fetch) {
       enable: true,
       html: '<code>x: sets, y: number of questions completed: incorrect answers</code>'
     };
-    $scope.data = transFormIncorrectPerSet($scope.raw);
+    $scope.data = transFormIncorrectPerSet($scope.raw, $scope.courses_filter);
   };
 
 
-    $scope.correctPerSet = function(){
-      $scope.options.chart.yAxis.axisLabel = 'Correct answers';
-      $scope.options.chart.xAxis.axisLabel = 'Sets';
-      $scope.options.chart.xAxis.rotateLabels = -45;
-      $scope.options.chart.yAxis.tickFormat = function(d) {
-        return d;
-      };
-      $scope.options.title = {
-        enable: true,
-        text: 'Number of correct questions answered by set'
-      };
-      $scope.options.subtitle = {
-        enable: true,
-        html: '<code>x: sets, y: number of questions completed: correct answers</code>'
-      };
-      $scope.data = transFormCorrectPerSet($scope.raw);
+  $scope.correctPerSet = function() {
+    $scope.lastUsed = 'correctPerSet';
+    $scope.options.chart.yAxis.axisLabel = 'Correct answers';
+    $scope.options.chart.xAxis.axisLabel = 'Sets';
+    $scope.options.chart.xAxis.rotateLabels = -45;
+    $scope.options.chart.yAxis.tickFormat = function(d) {
+      return d;
     };
+    $scope.options.title = {
+      enable: true,
+      text: 'Number of correct questions answered by set'
+    };
+    $scope.options.subtitle = {
+      enable: true,
+      html: '<code>x: sets, y: number of questions completed: correct answers</code>'
+    };
+    $scope.data = transFormCorrectPerSet($scope.raw, $scope.courses_filter);
+  };
 
-    $scope.courseTotals = function(){
-      $scope.options.chart.yAxis.axisLabel = 'Answers attempted';
-      $scope.options.chart.xAxis.axisLabel = 'Courses';
-      $scope.options.chart.xAxis.rotateLabels = -45;
-      $scope.options.chart.yAxis.tickFormat = function(d) {
-        return d;
-      };
-      $scope.options.title = {
-        enable: true,
-        text: 'Number of questions answered by course'
-      };
-      $scope.options.subtitle = {
-        enable: true,
-        html: '<code>x: courses, y: number of questions completed</code>'
-      };
-      $scope.data = transFormCourseTotals($scope.raw);
+  $scope.courseTotals = function() {
+    $scope.lastUsed = 'correctPerSet';
+    $scope.courses_filter = $scope.courses[0];
+    $scope.options.chart.yAxis.axisLabel = 'Answers attempted';
+    $scope.options.chart.xAxis.axisLabel = 'Courses';
+    $scope.options.chart.xAxis.rotateLabels = -45;
+    $scope.options.chart.yAxis.tickFormat = function(d) {
+      return d;
     };
+    $scope.options.title = {
+      enable: true,
+      text: 'Number of questions answered by course'
+    };
+    $scope.options.subtitle = {
+      enable: true,
+      html: '<code>x: courses, y: number of questions completed</code>'
+    };
+    $scope.data = transFormCourseTotals($scope.raw, $scope.courses_filter);
+  };
 }]);
 
-var transFormCourseTotals = function(data){
+var transFormCourseTotals = function(data) {
   returnData = [{
     key: "Cumulative Return",
     values: []
   }];
 
-  var coursesSorted = _.sortBy(_.uniq(_.pluck(data,'class')), function(course) {
+  var coursesSorted = _.sortBy(_.uniq(_.pluck(data, 'class')), function(course) {
     return course;
   });
 
-  _.each(coursesSorted, function(course){
-    returnData[0].values.push({label:course, value:0});
+  _.each(coursesSorted, function(course) {
+    returnData[0].values.push({
+      label: course,
+      value: 0
+    });
   });
 
   _.each(data, function(item) {
@@ -193,16 +245,20 @@ var transFormCourseTotals = function(data){
 
 };
 
-var transFormCorrectPerSet = function(data){
+var transFormCorrectPerSet = function(data, courseFilter) {
+  data = filterData(data, courseFilter);
   returnData = [{
     key: "Cumulative Return",
     values: []
   }];
 
-  var sets = _.uniq(_.pluck(data,'problem_set'));
+  var sets = _.uniq(_.pluck(data, 'problem_set'));
 
-  _.each(sets, function(set_item){
-    returnData[0].values.push({label:set_item, value:0});
+  _.each(sets, function(set_item) {
+    returnData[0].values.push({
+      label: set_item,
+      value: 0
+    });
   });
 
   _.each(data, function(item) {
@@ -210,7 +266,7 @@ var transFormCorrectPerSet = function(data){
       label: item.problem_set
     });
     if (corr) {
-      if (item.answerCorrect ==='true'){
+      if (item.answerCorrect === 'true') {
         corr.value = corr.value + 1;
       }
     } else {
@@ -224,18 +280,22 @@ var transFormCorrectPerSet = function(data){
 };
 
 
-var transFormIncorrectPerSet = function(data){
+var transFormIncorrectPerSet = function(data, courseFilter) {
+  data = filterData(data, courseFilter);
   returnData = [{
     key: "Cumulative Return",
     values: []
   }];
 
-  var sets = _.uniq(_.pluck(data,'problem_set'));
+  var sets = _.uniq(_.pluck(data, 'problem_set'));
 
   var set_objects = [];
 
-  _.each(sets, function(set_item){
-    returnData[0].values.push({label:set_item, value:0});
+  _.each(sets, function(set_item) {
+    returnData[0].values.push({
+      label: set_item,
+      value: 0
+    });
   });
 
   _.each(data, function(item) {
@@ -243,25 +303,26 @@ var transFormIncorrectPerSet = function(data){
       label: item.problem_set
     });
     if (corr) {
-      if (item.answerCorrect !=='true'){
+      if (item.answerCorrect !== 'true') {
         corr.value = corr.value + 1;
       }
     } else {
       returnData[0].values.push({
         label: item.problem_set,
-        value: item.answerCorrect!=='true'?1:0
+        value: item.answerCorrect !== 'true' ? 1 : 0
       });
     }
   });
   return returnData;
 };
 
-var transFormSetUse = function(data) {
+var transFormSetUse = function(data, courseFilter) {
+  data = filterData(data, courseFilter);
   returnData = [{
     key: "Cumulative Return",
     values: []
   }];
-  _.each(raw, function(item) {
+  _.each(data, function(item) {
     var corr = _.findWhere(returnData[0].values, {
       label: item.problem_set
     });
@@ -280,7 +341,9 @@ var transFormSetUse = function(data) {
 };
 
 
-var transFormPercentCorrect = function(data) {
+var transFormPercentCorrect = function(data, courseFilter) {
+  data = filterData(data, courseFilter);
+
   var returnData = [{
     key: "Cumulative Return",
     values: []
@@ -303,8 +366,20 @@ var transFormPercentCorrect = function(data) {
   return returnData;
 };
 
+var filterData = function(data, courseFilter) {
+  if (courseFilter !== 'All Courses') {
+    data = _.where(data, {
+      class: courseFilter
+    });
+  } else {
+    data = data;
+  }
+  return data;
+}
 
-var transFormUserCounts = function(data) {
+
+var transFormUserCounts = function(data, courseFilter) {
+  data = filterData(data, courseFilter);
   returnData = [{
     key: "Cumulative Return",
     values: []
@@ -325,7 +400,8 @@ var transFormUserCounts = function(data) {
   return returnData;
 };
 
-var transFormTimeSpent = function(data) {
+var transFormTimeSpent = function(data, courseFilter) {
+  data = filterData(data, courseFilter);
   var returnData = [{
     key: "Cumulative Return",
     values: []
