@@ -49,7 +49,7 @@
   </div>
 
   <div>
-    <p><br><select ng-change="updateCourseFilter()" ng-model="courses_filter" ng-options="c as c for c in courses">
+    <p ng-show="courseFilterEnabled"><br><select ng-change="updateCourseFilter()" ng-model="courses_filter" ng-options="c as c for c in courses">
     </select></p>
       <div>
           <nvd3 options="options" data="data"></nvd3>

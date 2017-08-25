@@ -1,5 +1,6 @@
 visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch) {
   $scope.data = [];
+  $scope.courseFilterEnabled = true;
 
   Fetch.getData('raw.json').then(function(result) {
     $scope.raw = result.data;
@@ -84,8 +85,8 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     }
   };
 
-
   $scope.userCorrect = function() {
+    $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'userCorrect';
     $scope.options.chart.yAxis.axisLabel = '% correct';
     $scope.options.chart.xAxis.axisLabel = 'Students';
@@ -104,6 +105,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
   };
 
   $scope.userCounts = function() {
+    $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'userCounts';
     $scope.options.chart.yAxis.axisLabel = 'Questions Answered';
     $scope.options.chart.xAxis.axisLabel = 'Students';
@@ -122,6 +124,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
   };
 
   $scope.timeSpent = function() {
+    $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'timeSpent';
     $scope.options.chart.yAxis.axisLabel = 'Average Time Spent';
     $scope.options.chart.xAxis.axisLabel = 'Students';
@@ -140,6 +143,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
   };
 
   $scope.setUse = function() {
+    $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'setUse';
     $scope.options.chart.yAxis.axisLabel = 'Questions answered';
     $scope.options.chart.xAxis.axisLabel = 'Sets';
@@ -159,6 +163,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
   };
 
   $scope.incorrectPerSet = function() {
+    $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'incorrectPerSet';
     $scope.options.chart.yAxis.axisLabel = 'Incorrect answers';
     $scope.options.chart.xAxis.axisLabel = 'Sets';
@@ -179,6 +184,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
 
 
   $scope.correctPerSet = function() {
+    $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'correctPerSet';
     $scope.options.chart.yAxis.axisLabel = 'Correct answers';
     $scope.options.chart.xAxis.axisLabel = 'Sets';
@@ -198,6 +204,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
   };
 
   $scope.courseTotals = function() {
+    $scope.courseFilterEnabled = false;
     $scope.lastUsed = 'correctPerSet';
     $scope.courses_filter = $scope.courses[0];
     $scope.options.chart.yAxis.axisLabel = 'Answers attempted';
