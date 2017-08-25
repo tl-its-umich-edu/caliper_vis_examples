@@ -82,6 +82,10 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
       case 'courseTotals':
         $scope.courseTotals();
         break;
+      case 'correctByQuestion':
+        $scope.correctByQuestion();
+        break;
+
     }
   };
 
@@ -104,6 +108,31 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     $scope.data = transFormPercentCorrect($scope.raw, $scope.courses_filter);
   };
 
+
+$scope.correctByQuestion = function() {
+
+  $scope.courseFilterEnabled = true;
+  $scope.lastUsed = 'correctByQuestion';
+  $scope.options.chart.yAxis.axisLabel = '% correct';
+  $scope.options.chart.xAxis.axisLabel = 'Problems';
+  $scope.options.chart.xAxis.rotateLabels = -45;
+  $scope.options.title = {
+    enable: true,
+    text: '% of correct answers to problems'
+  };
+  $scope.options.subtitle = {
+    enable: true,
+    html: '<code>x: problems, y: %correct answers</code>'
+  };
+  $scope.options.chart.yAxis.tickFormat = function(d) {
+    return d;
+  };
+  $scope.data = transFormcorrectByQuestion($scope.raw, $scope.courses_filter);
+};
+
+
+
+
   $scope.userCounts = function() {
     $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'userCounts';
@@ -122,6 +151,9 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     };
     $scope.data = transFormUserCounts($scope.raw, $scope.courses_filter);
   };
+
+
+
 
   $scope.timeSpent = function() {
     $scope.courseFilterEnabled = true;
@@ -250,6 +282,45 @@ var transFormCourseTotals = function(data) {
   });
   return returnData;
 
+};
+var transFormcorrectByQuestion = function(data, courseFilter) {
+    data = filterData(data, courseFilter);
+    returnData = [{
+      key: "Cumulative Return",
+      values: []
+    }];
+
+    var problems = _.uniq(_.pluck(data, 'problem'));
+
+    _.each(problems, function(set_item) {
+      returnData[0].values.push({
+        label: set_item,
+        value: 0,
+        num:0
+      });
+    });
+
+    _.each(data, function(item) {
+      var corr = _.findWhere(returnData[0].values, {
+        label: item.problem
+      });
+      if (corr) {
+        if (item.answerCorrect === 'true') {
+          corr.value = corr.value + 1;
+        }
+        corr.num = corr.num + 1;
+      } else {
+        returnData[0].values.push({
+          label: item.problem,
+          value: item.answerCorrect === 'true' ? 1 : 0,
+          num: 1
+        });
+      }
+    });
+    _.each(returnData[0].values, function(item) {
+      item.value = Math.round(item.value/item.num * 100);
+    });
+    return returnData;
 };
 
 var transFormCorrectPerSet = function(data, courseFilter) {
