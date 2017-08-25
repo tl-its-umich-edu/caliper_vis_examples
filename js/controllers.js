@@ -1,7 +1,6 @@
 visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch) {
   $scope.data = [];
   $scope.courseFilterEnabled = true;
-
   Fetch.getData('raw.json').then(function(result) {
     $scope.raw = result.data;
     $scope.courses = _.uniq(
@@ -17,8 +16,6 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     $scope.lastUsed = 'userCorrect';
     $scope.data = transFormUserCounts(result.data, $scope.courses_filter);
   });
-
-
   $scope.options = {
     chart: {
       type: 'discreteBarChart',
@@ -57,7 +54,6 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
       html: '<code>x: students, y: total answers</code>'
     }
   };
-
   $scope.updateCourseFilter = function() {
     $log.warn($scope.lastUsed + ' ' + $scope.courses_filter);
     switch ($scope.lastUsed) {
@@ -88,7 +84,6 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
 
     }
   };
-
   $scope.userCorrect = function() {
     $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'userCorrect';
@@ -107,32 +102,25 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     };
     $scope.data = transFormPercentCorrect($scope.raw, $scope.courses_filter);
   };
-
-
-$scope.correctByQuestion = function() {
-
-  $scope.courseFilterEnabled = true;
-  $scope.lastUsed = 'correctByQuestion';
-  $scope.options.chart.yAxis.axisLabel = '% correct';
-  $scope.options.chart.xAxis.axisLabel = 'Problems';
-  $scope.options.chart.xAxis.rotateLabels = -45;
-  $scope.options.title = {
-    enable: true,
-    text: '% of correct answers to problems'
+  $scope.correctByQuestion = function() {
+    $scope.courseFilterEnabled = true;
+    $scope.lastUsed = 'correctByQuestion';
+    $scope.options.chart.yAxis.axisLabel = '% correct';
+    $scope.options.chart.xAxis.axisLabel = 'Problems';
+    $scope.options.chart.xAxis.rotateLabels = -45;
+    $scope.options.title = {
+      enable: true,
+      text: '% of correct answers to problems'
+    };
+    $scope.options.subtitle = {
+      enable: true,
+      html: '<code>x: problems, y: %correct answers</code>'
+    };
+    $scope.options.chart.yAxis.tickFormat = function(d) {
+      return d;
+    };
+    $scope.data = transFormcorrectByQuestion($scope.raw, $scope.courses_filter);
   };
-  $scope.options.subtitle = {
-    enable: true,
-    html: '<code>x: problems, y: %correct answers</code>'
-  };
-  $scope.options.chart.yAxis.tickFormat = function(d) {
-    return d;
-  };
-  $scope.data = transFormcorrectByQuestion($scope.raw, $scope.courses_filter);
-};
-
-
-
-
   $scope.userCounts = function() {
     $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'userCounts';
@@ -151,10 +139,6 @@ $scope.correctByQuestion = function() {
     };
     $scope.data = transFormUserCounts($scope.raw, $scope.courses_filter);
   };
-
-
-
-
   $scope.timeSpent = function() {
     $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'timeSpent';
@@ -173,7 +157,6 @@ $scope.correctByQuestion = function() {
     };
     $scope.data = transFormTimeSpent($scope.raw, $scope.courses_filter);
   };
-
   $scope.setUse = function() {
     $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'setUse';
@@ -193,7 +176,6 @@ $scope.correctByQuestion = function() {
     };
     $scope.data = transFormSetUse($scope.raw, $scope.courses_filter);
   };
-
   $scope.incorrectPerSet = function() {
     $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'incorrectPerSet';
@@ -213,8 +195,6 @@ $scope.correctByQuestion = function() {
     };
     $scope.data = transFormIncorrectPerSet($scope.raw, $scope.courses_filter);
   };
-
-
   $scope.correctPerSet = function() {
     $scope.courseFilterEnabled = true;
     $scope.lastUsed = 'correctPerSet';
@@ -234,7 +214,6 @@ $scope.correctByQuestion = function() {
     };
     $scope.data = transFormCorrectPerSet($scope.raw, $scope.courses_filter);
   };
-
   $scope.courseTotals = function() {
     $scope.courseFilterEnabled = false;
     $scope.lastUsed = 'correctPerSet';
@@ -257,6 +236,16 @@ $scope.correctByQuestion = function() {
   };
 }]);
 
+var filterData = function(data, courseFilter) {
+  if (courseFilter !== 'All Courses') {
+    data = _.where(data, {
+      class: courseFilter
+    });
+  } else {
+    data = data;
+  }
+  return data;
+};
 var transFormCourseTotals = function(data) {
   returnData = [{
     key: "Cumulative Return",
@@ -322,7 +311,6 @@ var transFormcorrectByQuestion = function(data, courseFilter) {
     });
     return returnData;
 };
-
 var transFormCorrectPerSet = function(data, courseFilter) {
   data = filterData(data, courseFilter);
   returnData = [{
@@ -356,8 +344,6 @@ var transFormCorrectPerSet = function(data, courseFilter) {
   });
   return returnData;
 };
-
-
 var transFormIncorrectPerSet = function(data, courseFilter) {
   data = filterData(data, courseFilter);
   returnData = [{
@@ -393,7 +379,6 @@ var transFormIncorrectPerSet = function(data, courseFilter) {
   });
   return returnData;
 };
-
 var transFormSetUse = function(data, courseFilter) {
   data = filterData(data, courseFilter);
   returnData = [{
@@ -417,8 +402,6 @@ var transFormSetUse = function(data, courseFilter) {
   return returnData;
 
 };
-
-
 var transFormPercentCorrect = function(data, courseFilter) {
   data = filterData(data, courseFilter);
 
@@ -450,19 +433,6 @@ var transFormPercentCorrect = function(data, courseFilter) {
 
   return returnData;
 };
-
-var filterData = function(data, courseFilter) {
-  if (courseFilter !== 'All Courses') {
-    data = _.where(data, {
-      class: courseFilter
-    });
-  } else {
-    data = data;
-  }
-  return data;
-}
-
-
 var transFormUserCounts = function(data, courseFilter) {
   data = filterData(data, courseFilter);
   returnData = [{
@@ -484,7 +454,6 @@ var transFormUserCounts = function(data, courseFilter) {
   });
   return returnData;
 };
-
 var transFormTimeSpent = function(data, courseFilter) {
   data = filterData(data, courseFilter);
   var returnData = [{

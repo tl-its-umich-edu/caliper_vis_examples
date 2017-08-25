@@ -609,51 +609,50 @@
 // });
 
 
-$('#applyFilter').on('click', function(){
-  filter_val = $('#filter  option:selected').text();
-  $('#user_counts').trigger("click");
-  //console.log(filter_val);
-});
+// $('#applyFilter').on('click', function(){
+//   filter_val = $('#filter  option:selected').text();
+//   $('#user_counts').trigger("click");
+//   //console.log(filter_val);
+// });
 
-
-function update() {
-  historicalBarChart[0].values = _.sortBy(historicalBarChart[0].values, 'label');
-  nv.addGraph(function() {
-    var chart = nv.models.discreteBarChart()
-      .x(function(d) {
-        return d.label;
-      })
-      .y(function(d) {
-        return d.value;
-      })
-      .showValues(false)
-      .duration(250);
-    chart.xAxis.rotateLabels(-45);
-
-    chart.xAxis.tickFormat(function(d, i) {
-      return d;
-    });
-
-    chart.yAxis.tickFormat(function(d, i) {
-      if(mode ==='num'){
-        return Math.round(d);
-      }
-      if (mode ==='percent') {
-        return d + ' %';
-      }
-      if (mode ==='time') {
-        return d + ' s';
-      }
-
-    });
-    d3.select('#chart1 svg')
-      .datum(historicalBarChart)
-      .call(chart);
-
-    nv.utils.windowResize(chart.update);
-    return chart;
-  });
-
-
-}
->>>>>>> 7cee8e40652b7c96c79b8217b446e498e09989e8
+// 
+// function update() {
+//   historicalBarChart[0].values = _.sortBy(historicalBarChart[0].values, 'label');
+//   nv.addGraph(function() {
+//     var chart = nv.models.discreteBarChart()
+//       .x(function(d) {
+//         return d.label;
+//       })
+//       .y(function(d) {
+//         return d.value;
+//       })
+//       .showValues(false)
+//       .duration(250);
+//     chart.xAxis.rotateLabels(-45);
+//
+//     chart.xAxis.tickFormat(function(d, i) {
+//       return d;
+//     });
+//
+//     chart.yAxis.tickFormat(function(d, i) {
+//       if(mode ==='num'){
+//         return Math.round(d);
+//       }
+//       if (mode ==='percent') {
+//         return d + ' %';
+//       }
+//       if (mode ==='time') {
+//         return d + ' s';
+//       }
+//
+//     });
+//     d3.select('#chart1 svg')
+//       .datum(historicalBarChart)
+//       .call(chart);
+//
+//     nv.utils.windowResize(chart.update);
+//     return chart;
+//   });
+//
+//
+// }

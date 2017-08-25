@@ -7,7 +7,7 @@ visApp.factory('Fetch', function ($http) {
           return result;
         },
         function error(result) {
-          //errorDisplay(url, result.status, 'Unable to get terms');
+          //display a helpful error message
           return result;
         }
       );
