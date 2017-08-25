@@ -96,7 +96,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     };
     $scope.options.subtitle = {
       enable: true,
-      html: '<code>x: students, y: total correct answers</code>'
+      html: '<code>x: students, y: % correct answers</code>'
     };
     $scope.options.chart.yAxis.tickFormat = function(d) {
       return d + ' %';
@@ -356,20 +356,27 @@ var transFormPercentCorrect = function(data, courseFilter) {
     values: []
   }];
   _.each(data, function(item) {
-    if (item.answerCorrect === 'true') {
       var corr = _.findWhere(returnData[0].values, {
         label: item.actor
       });
       if (corr) {
-        corr.value = corr.value + 1;
+        if (item.answerCorrect === 'true') {
+          corr.value = corr.value + 1;
+        }
+        corr.total = corr.total + 1;
       } else {
         returnData[0].values.push({
           label: item.actor,
-          value: 1
+          value: item.answerCorrect === 'true'?1:0,
+          total:1
         });
       }
-    }
+
   });
+  _.each(returnData[0].values, function(item){
+    item.value = item.value/item.total * 100;
+  });
+
   return returnData;
 };
 
@@ -424,20 +431,17 @@ var transFormTimeSpent = function(data, courseFilter) {
 
     if (corr) {
       corr.value = corr.value + thisTime;
-      corr.total = corr.total + 1;
+      corr.num = corr.num + 1;
     } else {
       returnData[0].values.push({
         label: item.actor,
         value: thisTime,
-        total: 1
+        num: 1
       });
     }
   });
-
   _.each(returnData[0].values, function(item, i) {
-    returnData[0].values[i].value = Math.round(item.value / item.total);
-    delete returnData[0].values[i].total;
+    returnData[0].values[i].value = Math.round(item.value / item.num);
   });
-
   return returnData;
 };
