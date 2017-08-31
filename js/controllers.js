@@ -81,7 +81,6 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
       case 'correctByQuestion':
         $scope.correctByQuestion();
         break;
-
     }
   };
   $scope.userCorrect = function() {
@@ -89,6 +88,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     $scope.lastUsed = 'userCorrect';
     $scope.options.chart.yAxis.axisLabel = '% correct';
     $scope.options.chart.xAxis.axisLabel = 'Students';
+    $scope.useInteractiveGuideline = true;
     $scope.options.title = {
       enable: true,
       text: 'Percent correct by student'
@@ -145,7 +145,7 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     $scope.options.chart.yAxis.axisLabel = 'Average Time Spent';
     $scope.options.chart.xAxis.axisLabel = 'Students';
     $scope.options.chart.yAxis.tickFormat = function(d) {
-      return d + ' s';
+      return Math.floor(d/60) + 'm ' + d%60  + 's';
     };
     $scope.options.title = {
       enable: true,
