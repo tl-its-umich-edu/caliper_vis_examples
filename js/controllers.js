@@ -234,254 +234,263 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     };
     $scope.data = transFormCourseTotals($scope.raw, $scope.courses_filter);
   };
-}]);
 
-var filterData = function(data, courseFilter) {
-  if (courseFilter !== 'All Courses') {
-    data = _.where(data, {
-      class: courseFilter
+
+  var filterData = function(data, courseFilter) {
+    if (courseFilter !== 'All Courses') {
+      data = _.where(data, {
+        class: courseFilter
+      });
+    } else {
+      data = data;
+    }
+    return data;
+  };
+  var transFormCourseTotals = function(data) {
+    returnData = [{
+      key: "Cumulative Return",
+      values: []
+    }];
+
+    var coursesSorted = _.sortBy(_.uniq(_.pluck(data, 'class')), function(course) {
+      return course;
     });
-  } else {
-    data = data;
-  }
-  return data;
-};
-var transFormCourseTotals = function(data) {
-  returnData = [{
-    key: "Cumulative Return",
-    values: []
-  }];
 
-  var coursesSorted = _.sortBy(_.uniq(_.pluck(data, 'class')), function(course) {
-    return course;
-  });
-
-  _.each(coursesSorted, function(course) {
-    returnData[0].values.push({
-      label: course,
-      value: 0
+    _.each(coursesSorted, function(course) {
+      returnData[0].values.push({
+        label: course,
+        value: 0
+      });
     });
-  });
 
-  _.each(data, function(item) {
-    var corr = _.findWhere(returnData[0].values, {
-      label: item.class
+    _.each(data, function(item) {
+      var corr = _.findWhere(returnData[0].values, {
+        label: item.class
+      });
+      corr.value = corr.value + 1;
     });
-    corr.value = corr.value + 1;
-  });
-  return returnData;
+    return returnData;
 
-};
-var transFormcorrectByQuestion = function(data, courseFilter) {
+  };
+  var transFormcorrectByQuestion = function(data, courseFilter) {
+      data = filterData(data, courseFilter);
+      returnData = [{
+        key: "Cumulative Return",
+        values: []
+      }];
+
+      var problems = _.uniq(_.pluck(data, 'problem'));
+
+      _.each(problems, function(set_item) {
+        returnData[0].values.push({
+          label: set_item,
+          value: 0,
+          num:0
+        });
+      });
+
+      _.each(data, function(item) {
+        var corr = _.findWhere(returnData[0].values, {
+          label: item.problem
+        });
+        if (corr) {
+          if (item.answerCorrect === 'true') {
+            corr.value = corr.value + 1;
+          }
+          corr.num = corr.num + 1;
+        } else {
+          returnData[0].values.push({
+            label: item.problem,
+            value: item.answerCorrect === 'true' ? 1 : 0,
+            num: 1
+          });
+        }
+      });
+      _.each(returnData[0].values, function(item) {
+        item.value = Math.round(item.value/item.num * 100);
+      });
+      return returnData;
+  };
+  var transFormCorrectPerSet = function(data, courseFilter) {
     data = filterData(data, courseFilter);
     returnData = [{
       key: "Cumulative Return",
       values: []
     }];
 
-    var problems = _.uniq(_.pluck(data, 'problem'));
+    var sets = _.uniq(_.pluck(data, 'problem_set'));
 
-    _.each(problems, function(set_item) {
+    _.each(sets, function(set_item) {
       returnData[0].values.push({
         label: set_item,
-        value: 0,
-        num:0
+        value: 0
       });
     });
 
     _.each(data, function(item) {
       var corr = _.findWhere(returnData[0].values, {
-        label: item.problem
+        label: item.problem_set
       });
       if (corr) {
         if (item.answerCorrect === 'true') {
           corr.value = corr.value + 1;
         }
-        corr.num = corr.num + 1;
       } else {
         returnData[0].values.push({
-          label: item.problem,
-          value: item.answerCorrect === 'true' ? 1 : 0,
-          num: 1
+          label: item.problem_set,
+          value: item.answerCorrect === 'true' ? 1 : 0
         });
       }
     });
-    _.each(returnData[0].values, function(item) {
-      item.value = Math.round(item.value/item.num * 100);
+    return returnData;
+  };
+  var transFormIncorrectPerSet = function(data, courseFilter) {
+    data = filterData(data, courseFilter);
+    returnData = [{
+      key: "Cumulative Return",
+      values: []
+    }];
+
+    var sets = _.uniq(_.pluck(data, 'problem_set'));
+
+    var set_objects = [];
+
+    _.each(sets, function(set_item) {
+      returnData[0].values.push({
+        label: set_item,
+        value: 0
+      });
+    });
+
+    _.each(data, function(item) {
+      var corr = _.findWhere(returnData[0].values, {
+        label: item.problem_set
+      });
+      if (corr) {
+        if (item.answerCorrect !== 'true') {
+          corr.value = corr.value + 1;
+        }
+      } else {
+        returnData[0].values.push({
+          label: item.problem_set,
+          value: item.answerCorrect !== 'true' ? 1 : 0
+        });
+      }
     });
     return returnData;
-};
-var transFormCorrectPerSet = function(data, courseFilter) {
-  data = filterData(data, courseFilter);
-  returnData = [{
-    key: "Cumulative Return",
-    values: []
-  }];
-
-  var sets = _.uniq(_.pluck(data, 'problem_set'));
-
-  _.each(sets, function(set_item) {
-    returnData[0].values.push({
-      label: set_item,
-      value: 0
-    });
-  });
-
-  _.each(data, function(item) {
-    var corr = _.findWhere(returnData[0].values, {
-      label: item.problem_set
-    });
-    if (corr) {
-      if (item.answerCorrect === 'true') {
+  };
+  var transFormSetUse = function(data, courseFilter) {
+    data = filterData(data, courseFilter);
+    returnData = [{
+      key: "Cumulative Return",
+      values: []
+    }];
+    _.each(data, function(item) {
+      var corr = _.findWhere(returnData[0].values, {
+        label: item.problem_set
+      });
+      if (corr) {
         corr.value = corr.value + 1;
+      } else {
+        returnData[0].values.push({
+          label: item.problem_set,
+          value: 1
+        });
       }
-    } else {
-      returnData[0].values.push({
-        label: item.problem_set,
-        value: item.answerCorrect === 'true' ? 1 : 0
-      });
-    }
-  });
-  return returnData;
-};
-var transFormIncorrectPerSet = function(data, courseFilter) {
-  data = filterData(data, courseFilter);
-  returnData = [{
-    key: "Cumulative Return",
-    values: []
-  }];
-
-  var sets = _.uniq(_.pluck(data, 'problem_set'));
-
-  var set_objects = [];
-
-  _.each(sets, function(set_item) {
-    returnData[0].values.push({
-      label: set_item,
-      value: 0
     });
-  });
 
-  _.each(data, function(item) {
-    var corr = _.findWhere(returnData[0].values, {
-      label: item.problem_set
+    return returnData;
+
+  };
+  var transFormPercentCorrect = function(data, courseFilter) {
+    data = filterData(data, courseFilter);
+
+    var returnData = [{
+      key: "Cumulative Return",
+      values: []
+    }];
+    _.each(data, function(item) {
+        var corr = _.findWhere(returnData[0].values, {
+          label: item.actor
+        });
+        if (corr) {
+          if (item.answerCorrect === 'true') {
+            corr.value = corr.value + 1;
+          }
+          corr.total = corr.total + 1;
+        } else {
+          returnData[0].values.push({
+            label: item.actor,
+            value: item.answerCorrect === 'true'?1:0,
+            total:1
+          });
+        }
+
     });
-    if (corr) {
-      if (item.answerCorrect !== 'true') {
-        corr.value = corr.value + 1;
-      }
-    } else {
-      returnData[0].values.push({
-        label: item.problem_set,
-        value: item.answerCorrect !== 'true' ? 1 : 0
-      });
-    }
-  });
-  return returnData;
-};
-var transFormSetUse = function(data, courseFilter) {
-  data = filterData(data, courseFilter);
-  returnData = [{
-    key: "Cumulative Return",
-    values: []
-  }];
-  _.each(data, function(item) {
-    var corr = _.findWhere(returnData[0].values, {
-      label: item.problem_set
+    _.each(returnData[0].values, function(item){
+      item.value = item.value/item.total * 100;
     });
-    if (corr) {
-      corr.value = corr.value + 1;
-    } else {
-      returnData[0].values.push({
-        label: item.problem_set,
-        value: 1
-      });
-    }
-  });
 
-  return returnData;
-
-};
-var transFormPercentCorrect = function(data, courseFilter) {
-  data = filterData(data, courseFilter);
-
-  var returnData = [{
-    key: "Cumulative Return",
-    values: []
-  }];
-  _.each(data, function(item) {
+    return returnData;
+  };
+  var transFormUserCounts = function(data, courseFilter) {
+    data = filterData(data, courseFilter);
+    returnData = [{
+      key: "Cumulative Return",
+      values: []
+    }];
+    _.each(data, function(item) {
       var corr = _.findWhere(returnData[0].values, {
         label: item.actor
       });
       if (corr) {
-        if (item.answerCorrect === 'true') {
-          corr.value = corr.value + 1;
-        }
-        corr.total = corr.total + 1;
+        corr.value = corr.value + 1;
       } else {
         returnData[0].values.push({
           label: item.actor,
-          value: item.answerCorrect === 'true'?1:0,
-          total:1
+          value: 1
         });
       }
-
-  });
-  _.each(returnData[0].values, function(item){
-    item.value = item.value/item.total * 100;
-  });
-
-  return returnData;
-};
-var transFormUserCounts = function(data, courseFilter) {
-  data = filterData(data, courseFilter);
-  returnData = [{
-    key: "Cumulative Return",
-    values: []
-  }];
-  _.each(data, function(item) {
-    var corr = _.findWhere(returnData[0].values, {
-      label: item.actor
     });
-    if (corr) {
-      corr.value = corr.value + 1;
-    } else {
-      returnData[0].values.push({
-        label: item.actor,
-        value: 1
+    return returnData;
+  };
+  var transFormTimeSpent = function(data, courseFilter) {
+    data = filterData(data, courseFilter);
+    var returnData = [{
+      key: "Cumulative Return",
+      values: []
+    }];
+
+
+
+    _.each(data, function(item, i) {
+      var duration = data[i].time;
+      var thisTime = moment.duration(duration, moment.ISO_8601).asSeconds();
+      var corr = _.findWhere(returnData[0].values, {
+        label: item.actor
       });
-    }
-  });
-  return returnData;
-};
-var transFormTimeSpent = function(data, courseFilter) {
-  data = filterData(data, courseFilter);
-  var returnData = [{
-    key: "Cumulative Return",
-    values: []
-  }];
 
-
-  _.each(data, function(item, i) {
-    var duration = data[i].time;
-    var thisTime = moment.duration(duration, moment.ISO_8601).asSeconds();
-    var corr = _.findWhere(returnData[0].values, {
-      label: item.actor
+      if (corr) {
+        corr.value = corr.value + thisTime;
+        corr.num = corr.num + 1;
+      } else {
+        returnData[0].values.push({
+          label: item.actor,
+          value: thisTime,
+          num: 1
+        });
+      }
     });
-
-    if (corr) {
-      corr.value = corr.value + thisTime;
-      corr.num = corr.num + 1;
-    } else {
-      returnData[0].values.push({
-        label: item.actor,
-        value: thisTime,
-        num: 1
-      });
+    _.each(returnData[0].values, function(item, i) {
+      returnData[0].values[i].value = Math.round(item.value / item.num);
+    });
+    if($scope.sortBy === "y"){
+      returnData[0].values = _.sortBy(returnData[0].values, 'value');
     }
-  });
-  _.each(returnData[0].values, function(item, i) {
-    returnData[0].values[i].value = Math.round(item.value / item.num);
-  });
-  return returnData;
-};
+
+    return returnData;
+  };
+
+
+
+}]);
