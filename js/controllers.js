@@ -513,3 +513,51 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     return returnData;
   };
 }]);
+
+visApp.controller('a1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch){
+  $scope.data = [];
+  // $scope.courseFilterEnabled = true;
+
+  $scope.getData = function(){
+    console.log($scope.categorizeBySet);
+    var student = $scope.student_filter || 'a_student.json';
+    Fetch.getData(student).then(function(result) {
+      //$scope.data =  _.sortBy(data, 'start');
+      $scope.data = transFormUseActions(result.data);
+    });
+    var transFormUseActions = function(data){
+      var actions =[];
+      _.each(data, function(item){
+        if(item.start !== null){
+          item.start = moment(item.start).format("D/M h:mm:ss a");
+          item.end = moment(item.end).format("D/M h:mm:ss a");
+          var thisTime = moment.duration(item.time, moment.ISO_8601).asSeconds();
+          if(Math.floor(thisTime/60) ===0){
+              item.time = thisTime%60  + ' s';
+          }
+          else {
+            item.time =Math.floor(thisTime/60) + ' m ' + thisTime%60  + ' s';
+          }
+          actions.push(item);
+        }
+      });
+
+      if($scope.categorizeBySet){
+        actions =  _.sortBy(_.groupBy(actions, 'problem_set'), 'start');
+      } else {
+        actions =  _.sortBy(actions, 'start');
+      }
+      return actions;
+    };
+
+// to produce the graph
+//
+// chart.color(function(d) {
+//   if (xLabels[d.x] == 'Condiments') return 'yellow';
+//   return 'green';
+// });
+
+
+  };
+  $scope.getData();
+}]);

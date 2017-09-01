@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Student flows</title>
+  <meta charset="utf-8">
+  <link href="bower_components/nvd3/build/nv.d3.css" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+  <style>
+    text {
+      font: 11px sans-serif;
+    }
+
+    svg {
+      display: block;
+    }
+
+    html,
+    body,
+    #chart1,
+    svg {
+      margin: 0px;
+      padding: 0px;
+      height: 100%;
+      width: 100%;
+    }
+    .nvd3-svg{
+      height:60% !important;
+      margin: 0 0 50px 0 !important;
+      padding: 0 0 300px 0 !important;
+      box-sizing: content-box;
+    }
+    li {
+      list-style: none;
+    }
+    .flow_item {
+      border:1px solid #bbb;
+      width:22%;
+      display:inline-block;
+      padding:10px;
+      font-size: 85%;
+      margin:5px;
+      border-radius:3px;
+    }
+    .glyphicon-ok {
+      color:green
+    }
+    .glyphicon-remove {
+      color:red
+    }
+  </style>
+</head>
+
+<body class="container-fluid" ng-app="visApp"  ng-controller="a1">
+  <br><br>
+  <p class="container">
+    <label for="student_filter">Select student</label>
+    <select id="student_filter"
+      ng-change="getData()" ng-model="student_filter">
+      <option value="a_student.json" selected>Student a</option>
+      <option value="b_student.json">Student b</option>
+    </select>
+    <input id="catBySet" type="checkbox" ng-model="categorizeBySet" ng-change="getData()">
+    <label for="catBySet">Group By Set</label>
+  </p>
+  <div ng-show="categorizeBySet">
+    <ul>
+      <li ng-repeat="items in data">
+        <h3>{{items[0].problem_set}}</h3>
+          <div class="flow_item" ng-repeat="item in items">
+            <div ng-if="item.action==='AssessmentItemEvent_Completed'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
+            <div ng-if="item.action==='AssessmentItemEvent_Skipped'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
+            {{item.action}}<br>
+            {{item.problem}}<br>
+            <div class="pull-right"><small>{{item.time}}</small></div>
+            <small>{{item.start}}</small> <br>
+            <small>{{item.end}}</small>
+            <div ng-if="!$last" class="glyphicon glyphicon-arrow-right pull-right" aria-hidden="true"></div>
+          </div>
+      </li>
+    </ul>
+  </div>
+  <div ng-show="!categorizeBySet || categorizeBySet===false">
+
+    <div class="flow_item" ng-repeat="item in data">
+      <div ng-if="item.action==='AssessmentItemEvent_Completed'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
+      <div ng-if="item.action==='AssessmentItemEvent_Skipped'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
+      <strong>{{item.problem_set}}</strong><br>
+      {{item.action}}<br>
+      {{item.problem}}<br>
+      <div class="pull-right"><small>{{item.time}}</small></div>
+      <small>{{item.start}}</small> <br>
+      <small>{{item.end}}</small>
+      <div ng-if="!$last" class="glyphicon glyphicon-arrow-right pull-right" aria-hidden="true"></div>
+    </div>
+  </div>
+
+
+<!-- <div id="chart1">
+    <svg></svg>
+  </div> -->
+
+  <script src="bower_components/underscore/underscore-min.js"></script>
+
+
+  <script src="bower_components/moment/min/moment.min.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/angular/angular.min.js"></script>
+  <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
+  <script src="bower_components/nvd3/build/nv.d3.min.js"></script>
+  <script src="bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/factories.js"></script>
+</body>
+
+</html>
