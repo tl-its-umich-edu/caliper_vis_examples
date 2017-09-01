@@ -53,8 +53,8 @@
   <div>
     <p ng-show="courseFilterEnabled"><br><select ng-change="updateCourseFilter()" ng-model="courses_filter" ng-options="c as c for c in courses">
     </select>
-    <input type="radio" name="sort" value="x" ng-model="sortBy" id="sortByX"><label for="sortByX">Sort by x</label>
-    <input type="radio" name="sort" value="y" ng-model="sortBy" id="sortByY"><label for="sortByY">Sort by y</label>
+    <input type="radio" name="sort" value="x" ng-model="sortBy" id="sortByX" ng-change="updateCourseFilter()"><label for="sortByX">Sort by x</label>
+    <input type="radio" name="sort" value="y" ng-model="sortBy" id="sortByY" ng-change="updateCourseFilter()"><label for="sortByY">Sort by y</label>
   </p>
       <div>
           <nvd3 options="options" data="data"></nvd3>

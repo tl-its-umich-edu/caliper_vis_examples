@@ -269,6 +269,9 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
       });
       corr.value = corr.value + 1;
     });
+    if($scope.sortBy === 'y'){
+      returnData[0].values = _.sortBy(returnData[0].values, 'value').reverse();
+    }
     return returnData;
 
   };
@@ -309,6 +312,10 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
       _.each(returnData[0].values, function(item) {
         item.value = Math.round(item.value/item.num * 100);
       });
+      if($scope.sortBy === 'y'){
+        returnData[0].values = _.sortBy(returnData[0].values, 'value').reverse();
+      }
+
       return returnData;
   };
   var transFormCorrectPerSet = function(data, courseFilter) {
@@ -342,6 +349,10 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
         });
       }
     });
+    if($scope.sortBy === 'y'){
+      returnData[0].values = _.sortBy(returnData[0].values, 'value').reverse();
+    }
+
     return returnData;
   };
   var transFormIncorrectPerSet = function(data, courseFilter) {
@@ -377,6 +388,10 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
         });
       }
     });
+    if($scope.sortBy === 'y'){
+      returnData[0].values = _.sortBy(returnData[0].values, 'value').reverse();
+    }
+
     return returnData;
   };
   var transFormSetUse = function(data, courseFilter) {
@@ -398,6 +413,9 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
         });
       }
     });
+    if($scope.sortBy === 'y'){
+      returnData[0].values = _.sortBy(returnData[0].values, 'value').reverse();
+    }
 
     return returnData;
 
@@ -430,6 +448,10 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     _.each(returnData[0].values, function(item){
       item.value = item.value/item.total * 100;
     });
+    if($scope.sortBy === 'y'){
+      returnData[0].values = _.sortBy(returnData[0].values, 'value').reverse();
+    }
+
 
     return returnData;
   };
@@ -452,6 +474,10 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
         });
       }
     });
+    if($scope.sortBy === 'y'){
+      returnData[0].values = _.sortBy(returnData[0].values, 'value').reverse();
+    }
+
     return returnData;
   };
   var transFormTimeSpent = function(data, courseFilter) {
@@ -460,9 +486,6 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
       key: "Cumulative Return",
       values: []
     }];
-
-
-
     _.each(data, function(item, i) {
       var duration = data[i].time;
       var thisTime = moment.duration(duration, moment.ISO_8601).asSeconds();
@@ -484,13 +507,9 @@ visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
     _.each(returnData[0].values, function(item, i) {
       returnData[0].values[i].value = Math.round(item.value / item.num);
     });
-    if($scope.sortBy === "y"){
-      returnData[0].values = _.sortBy(returnData[0].values, 'value');
+    if($scope.sortBy === 'y'){
+      returnData[0].values = _.sortBy(returnData[0].values, 'value').reverse();
     }
-
     return returnData;
   };
-
-
-
 }]);
