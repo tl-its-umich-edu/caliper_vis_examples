@@ -1,0 +1,23 @@
+{
+  "name": "caliper_vis",
+  "homepage": "https://github.com/tl-its-umich-edu/caliper_vis_examples",
+  "authors": [
+    "Silverio <gsilver@umich.edu>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-nvd3": "^1.0.9",
+    "bootstrap": "^3.3.7",
+    "moment": "^2.18.1",
+    "underscore": "^1.8.3"
+  }
+}

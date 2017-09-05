@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?lang=js&amp;skin=Sons-Of-Obsidian"></script>
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+      <br>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" data-toggle="tab" href="#caliper" role="tab">Caliper format</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-toggle="tab" href="#caliperlite" role="tab">Caliper lite</a>
+      </li>
+    </ul>
+<br>
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="caliper" role="tabpanel">
+        <pre class="prettyprint lang-js linenums">
+          [{
+              "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
+              "@type": "http://purl.imsglobal.org/caliper/v1/AssessmentItemEvent",
+              "actor": {
+                "@id": "https://mcommunity.umich.edu/#profile:1",
+                "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
+                "@type": "http://purl.imsglobal.org/caliper/v1/lis/Person",
+                "name": "1"
+              },
+              "action": "http://purl.imsglobal.org/vocab/caliper/v1/action#Completed",
+              "object": {
+                "@id": "https://docs.google.com/document/d/1OveeizOve81yaP2llIhoW2j75SJN4sz4AyV2RcZ7y30/pub",
+                "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
+                "@type": "http://purl.imsglobal.org/caliper/v1/AssessmentItem",
+                "name": "UM PHYSICS 240 Winter 2012 Final Exam Problem 09",
+                "isPartOf": {
+                  "@id": "https://problemroulette.lsa.umich.edu/courses/5/topics/147",
+                  "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
+                  "@type": "http://purl.imsglobal.org/caliper/v1/Assessment",
+                  "name": "Polarization"
+                }
+              },
+              "generated": {
+                "@id": "https://docs.google.com/document/d/1OveeizOve81yaP2llIhoW2j75SJN4sz4AyV2RcZ7y30/pub/response",
+                "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
+                "@type": "http://purl.imsglobal.org/caliper/v1/MultipleChoiceResponse",
+                "extensions": {
+                  "isStudentAnswerCorrect": "false",
+                  "correctAnswer": "3"
+                },
+                "attempt": {
+                  "@id": "https://docs.google.com/document/d/1OveeizOve81yaP2llIhoW2j75SJN4sz4AyV2RcZ7y30/pub/attempt",
+                  "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
+                  "@type": "http://purl.imsglobal.org/caliper/v1/Attempt",
+                  "count": 1,
+                  "startedAtTime": "2017-04-21T21:48:53.000Z",
+                  "endedAtTime": "2017-04-21T21:49:19.000Z",
+                  "duration": "PT26S"
+                },
+                "value": "5"
+              },
+              "eventTime": "2017-04-21T21:49:19.867Z",
+              "edApp": {
+                "@id": "https://problemroulette.lsa.umich.edu/",
+                "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
+                "@type": "http://purl.imsglobal.org/caliper/v1/SoftwareApplication"
+              },
+              "group": {
+                "@id": "https://problemroulette.lsa.umich.edu/courses/5",
+                "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
+                "@type": "http://purl.imsglobal.org/caliper/v1/lis/CourseOffering",
+                "name": "Physics 240"
+              },
+              "openlrsSourceId": "6ef42f91-5ec0-45c6-b045-5a51fce7cdca"
+            }
+          ]
+        </pre>
+
+
+      </div>
+      <div class="tab-pane" id="caliperlite" role="tabpanel">
+        <pre class="prettyprint lang-js linenums">
+        [{
+          "action": "AssessmentItemEvent_Started",
+          "problem_set": "Coulomb's law",
+          "problem": "UM PHYSICS 240 Winter 2012 Midterm Exam 1 Problem 08",
+          "answerCorrect": null,
+          "time": null,
+          "actor": "2",
+          "start": null,
+          "end": null,
+          "class": "Physics 240"
+        }]
+      </pre>
+
+      </div>
+    </div>
+
+</div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  </body>
+</html>
