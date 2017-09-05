@@ -519,10 +519,9 @@ visApp.controller('a1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
   // $scope.courseFilterEnabled = true;
 
   $scope.getData = function(){
-    console.log($scope.categorizeBySet);
+
     var student = $scope.student_filter || 'a_student.json';
     Fetch.getData(student).then(function(result) {
-      //$scope.data =  _.sortBy(data, 'start');
       $scope.data = transFormUseActions(result.data);
     });
     var transFormUseActions = function(data){
@@ -549,15 +548,6 @@ visApp.controller('a1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
       }
       return actions;
     };
-
-// to produce the graph
-//
-// chart.color(function(d) {
-//   if (xLabels[d.x] == 'Condiments') return 'yellow';
-//   return 'green';
-// });
-
-
   };
   $scope.getData();
 }]);

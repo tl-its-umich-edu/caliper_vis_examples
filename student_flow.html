@@ -37,12 +37,12 @@
     }
     .flow_item {
       border:1px solid #bbb;
-      width:22%;
-      display:inline-block;
-      padding:10px;
-      font-size: 85%;
-      margin:5px;
+      padding:5px;
+      font-size: 80%;
+      margin:3px;
       border-radius:3px;
+      flex: 1;
+
     }
     .glyphicon-ok {
       color:green
@@ -50,6 +50,17 @@
     .glyphicon-remove {
       color:red
     }
+    .problem {
+      color:#aaa
+    }
+    .flex-container{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+    }
+
   </style>
 </head>
 
@@ -69,31 +80,34 @@
     <ul>
       <li ng-repeat="items in data">
         <h3>{{items[0].problem_set}}</h3>
-          <div class="flow_item" ng-repeat="item in items">
-            <div ng-if="item.action==='AssessmentItemEvent_Completed'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
-            <div ng-if="item.action==='AssessmentItemEvent_Skipped'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
-            {{item.action}}<br>
-            {{item.problem}}<br>
-            <div class="pull-right"><small>{{item.time}}</small></div>
-            <small>{{item.start}}</small> <br>
-            <small>{{item.end}}</small>
-            <div ng-if="!$last" class="glyphicon glyphicon-arrow-right pull-right" aria-hidden="true"></div>
+          <div class="flex-container">
+            <div class="flow_item" ng-repeat="item in items">
+              <div ng-if="item.action==='AssessmentItemEvent_Completed'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
+              <div ng-if="item.action==='AssessmentItemEvent_Skipped'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
+              {{item.action}}<br>
+              {{item.problem}}<br>
+              <div class="pull-right"><small>{{item.time}}</small></div>
+              <small>{{item.start}}</small> <br>
+              <small>{{item.end}}</small>
+              <div ng-if="!$last" class="glyphicon glyphicon-arrow-right pull-right" aria-hidden="true"></div>
+            </div>
           </div>
       </li>
     </ul>
   </div>
   <div ng-show="!categorizeBySet || categorizeBySet===false">
-
+  <div class="flex-container">
     <div class="flow_item" ng-repeat="item in data">
       <div ng-if="item.action==='AssessmentItemEvent_Completed'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
       <div ng-if="item.action==='AssessmentItemEvent_Skipped'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
-      <strong>{{item.problem_set}}</strong><br>
+      <strong>{{item.problem_set | limitTo:30}} <span ng-show="item.problem_set.length > 30">[...]</span></strong><br>
       {{item.action}}<br>
-      {{item.problem}}<br>
+      <small class="problem">{{item.problem}}</small><br>
       <div class="pull-right"><small>{{item.time}}</small></div>
       <small>{{item.start}}</small> <br>
       <small>{{item.end}}</small>
       <div ng-if="!$last" class="glyphicon glyphicon-arrow-right pull-right" aria-hidden="true"></div>
+    </div>
     </div>
   </div>
 
@@ -111,6 +125,7 @@
   <script src="bower_components/d3/d3.min.js" charset="utf-8"></script>
   <script src="bower_components/nvd3/build/nv.d3.min.js"></script>
   <script src="bower_components/angular-nvd3/dist/angular-nvd3.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
   <script src="js/app.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/factories.js"></script>
