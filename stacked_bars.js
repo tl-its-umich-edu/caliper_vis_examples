@@ -11,7 +11,7 @@ var grouped_data = [{
 }];
 
 
-$.getJSON('raw.json', {})
+$.getJSON('completed.json', {})
   .done(function(data) {
     raw = data;
 

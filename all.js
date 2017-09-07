@@ -1,6 +1,6 @@
 /// add most skipped, completed, etc (maybe top x, bottom x).
 
-$.getJSON('all_anon_compacted.json', {})
+$.getJSON('all.json', {})
   .done(function(data) {
     // $('.btn').on('click', function(e){
     //   $(".btn-group button").each(function() {

@@ -1,6 +1,6 @@
 var raw = [];
 
-$.getJSON('raw.json', {})
+$.getJSON('completed.json', {})
   .done(function(data) {
     raw = data;
     var days = _.uniq(_.map(raw, function(item){ return  moment(item.end).format('M/D'); }));
