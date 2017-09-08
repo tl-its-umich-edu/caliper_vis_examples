@@ -55,6 +55,9 @@
     .glyphicon-remove {
       color:red
     }
+    .glyphicon-chevron-right {
+      color:green
+    }
     .problem {
       color:#aaa
     }
@@ -63,6 +66,9 @@
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: space-between;
+    }
+    .incorrect {
+      color:darkorange
     }
   </style>
 </head>
@@ -85,8 +91,9 @@
         <h3>{{items[0].problem_set}}</h3>
           <div class="flex-container">
             <div class="flow_item" ng-repeat="item in items">
-              <div ng-if="item.action==='Completed'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
-              <div ng-if="item.action==='Skipped'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
+              <div ng-if="item.action==='Completed' && item.answerCorrect ==='true'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
+              <div ng-if="item.action==='Completed' && item.answerCorrect !=='true'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
+              <div ng-if="item.action==='Skipped'" class="glyphicon glyphicon-chevron-right pull-right" aria-hidden="true"></div>
               {{item.action}}<br>
               {{item.problem}}<br>
               <div class="pull-right"><small>{{item.time}}</small></div>
@@ -101,8 +108,9 @@
   <div ng-show="!categorizeBySet || categorizeBySet===false">
   <div class="flex-container">
     <div class="flow_item" ng-repeat="item in data">
-      <div ng-if="item.action==='Completed'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
-      <div ng-if="item.action==='Skipped'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
+      <div ng-if="item.action==='Completed' && item.answerCorrect ==='true'" class="glyphicon glyphicon-ok pull-right" aria-hidden="true"></div>
+      <div ng-if="item.action==='Completed' && item.answerCorrect !=='true'" class="glyphicon glyphicon-remove pull-right" aria-hidden="true"></div>
+      <div ng-if="item.action==='Skipped'" class="glyphicon glyphicon-chevron-right pull-right" aria-hidden="true"></div>
       <strong>{{item.problem_set | limitTo:30}} <span ng-show="item.problem_set.length > 30">[...]</span></strong><br>
       <small class="problem">{{item.problem}}</small><br>
       <div class="pull-right"><small>{{item.time}}</small></div>
