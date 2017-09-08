@@ -1,7 +1,7 @@
 visApp.controller('c1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch) {
   $scope.data = [];
   $scope.courseFilterEnabled = true;
-  Fetch.getData('completed.json').then(function(result) {
+  Fetch.getData('json/completed.json').then(function(result) {
     $scope.raw = result.data;
     $scope.courses = _.uniq(
       _.map(
@@ -520,7 +520,7 @@ visApp.controller('a1', ['$scope', '$log', 'Fetch', function($scope, $log, Fetch
 
   $scope.getData = function(){
 
-    var student = $scope.student_filter || 'a_student.json';
+    var student = $scope.student_filter || 'json/a_s.json';
     Fetch.getData(student).then(function(result) {
       $scope.data = transFormUseActions(result.data);
     });

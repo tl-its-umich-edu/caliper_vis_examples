@@ -9,7 +9,7 @@ var mode = 1;
 
 var raw = [];
 var userCounts = [];
-$.getJSON('completed.json', {})
+$.getJSON('json/completed.json', {})
   .done(function(data) {
     raw = data;
     $('#p1').trigger("click");

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+  body {
+    font: 10px sans-serif;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .filter {
+    color: #fff
+  }
+
+  .Skippednull {
+    stroke:orange;
+    fill: orange;
+  }
+
+  .Completedtrue {
+    stroke:green;
+    fill: green;
+  }
+
+  .Completedfalse {
+  stroke:red;
+    fill: red;
+  }
+
+
+  .bar.Skippednull:hover {
+    fill: darkorange;
+  }
+
+  .bar.Completedtrue:hover {
+    fill: darkgreen;
+  }
+
+  .bar.count1 {
+    /*stroke-dasharray:5,5*/
+  }
+  .bar:not(.count1):hover{
+    cursor: pointer;
+    /*fill: #000;*/
+  }
+  .bar.count1:hover{
+    cursor:not-allowed;
+  }
+  .Completedfalse:hover {
+    fill: #c00;
+  }
+  .x.axis path {
+    display: none;
+  }
+
+  .d3-tip {
+    line-height: 1;
+    font-weight: bold;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    border-radius: 2px;
+  }
+  /* Creates a small triangle extender for the tooltip */
+
+  .d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+  }
+  /* Style northward tooltips differently */
+
+  .d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+  }
+
+  .textlabel {
+
+  }
+</style>
+
+<body>
+  <script src="http://d3js.org/d3.v3.min.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+
+
+  <script>
+  var highlightData = function(problem){
+    // $('.bar').fadeIn();
+    // $('.bar').not("." + problem).fadeOut();
+    $('.bar').css('opacity', '1')
+    $('.bar').not("." + problem).css('opacity', '.2')
+  }
+  $.getJSON( "json/a_s.json", function( initResult ) {
+    data = initResult;
+    var currFilter ='';
+
+    var margin = {
+        top: 40,
+        right: 20,
+        bottom: 30,
+        left: 40
+      },
+      width = 960 - margin.left - margin.right,
+      height = 500 - margin.top - margin.bottom;
+    var x = d3.scale.ordinal()
+      .rangeRoundBands([0, width], .1);
+    var y = d3.scale.linear()
+      .range([height, 0]);
+    var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom");
+    var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+    var tip = d3.tip()
+      .attr('class', 'd3-tip')
+      .offset([-10, 0])
+      .html(function(d) {
+        var answer = '';
+        if (d.answerCorrect !== null) {
+          answer = '<p>Answer correct: ' + d.answerCorrect + '</p>';
+        } else {
+          answer = '<p>Answer: skipped</p>';
+        }
+        return '<div><strong>Time:</strong> <span style="color:red">' + moment.duration(d.time, moment.ISO_8601).asSeconds() + '</span><div>\
+        <p>' + d.problem + '</p><p>Done: ' + moment(d.end).format("D/M h:mm:ss a") + '</p>' + answer + '<p>Total tries: ' + d.count + '</p>';
+      })
+    var svg = d3.select("body").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .attr("style", 'padding-bottom:400px')
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.call(tip);
+
+    //d3.json("data.json", function(error, data) {
+      var problems = _.uniq(_.pluck(data, 'problem'));
+      var problemCount = [];
+      _.each(problems, function(problem) {
+        problemCount.push({
+          'problem': problem,
+          'count': 0
+        });
+      })
+      _.each(data, function(item) {
+        var corr = _.findWhere(problemCount, {
+          problem: item.problem
+        });
+        corr.count = corr.count + 1
+      });
+      _.each(data, function(item) {
+        var corr = _.findWhere(problemCount, {
+          problem: item.problem
+        });
+        item.count = corr.count;
+      });
+
+
+      x.domain(data.map(function(d) {
+        return moment(d.end).format("D/M h:mm:ss a");
+      }));
+      y.domain([0, d3.max(data, function(d) {
+        return moment.duration(d.time, moment.ISO_8601).asSeconds();
+      })]);
+      svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .attr("transform", "rotate(-45)")
+        .style("text-anchor", "end")
+        .style("width", "500px")
+        .style("text-anchor", "end")
+        .attr("dx", ".71em")
+        .style("text-anchor", "end")
+      svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+        .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 2)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Seconds");
+      svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", function(d) {
+          return 'bar ' + d.action + d.answerCorrect + ' ' + d.problem.replace(/ /gi,'_') + ' count' + d.count;
+        })
+        .attr("x", function(d) {
+          return x( moment(d.end).format("D/M h:mm:ss a"));
+        })
+        .attr("width", x.rangeBand())
+        .attr("y", function(d) {
+          return y(moment.duration(d.time, moment.ISO_8601).asSeconds());
+        })
+        .attr("height", function(d) {
+          return height - y(moment.duration(d.time, moment.ISO_8601).asSeconds());
+        })
+        .on('mouseover', tip.show)
+        .on('mouseout', tip.hide)
+        .on('click', function(d){
+          highlightData(d.problem.replace(/ /gi,'_'));
+        })
+        svg.append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+          .selectAll(".textlabel")
+          .data(data)
+          .enter()
+          .append("text")
+          .attr("class", "textlabel")
+          .attr("x", function(d){ return x( moment(d.end).format("D/M h:mm:ss a")) - 28; })
+          .attr("y", function(d){ return y(moment.duration(d.time, moment.ISO_8601).asSeconds()) - 50; })
+          .text(function(d){ return d.count});
+  });
+  </script>
+</body>
+
+</html>

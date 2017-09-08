@@ -1,6 +1,6 @@
 var raw = [];
 
-$.getJSON('completed.json', {})
+$.getJSON('json/completed.json', {})
   .done(function(data) {
     raw = data;
 
