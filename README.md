@@ -1,6 +1,4 @@
-# caliper_vis_doodles
-
-Documenting here solely so that things can be replaced with a **sane** process.
+# Caliper Visualization Examples
 
 1. Extract from caliper data a subset via jq
 ```bash
@@ -10,13 +8,13 @@ cat  pr_extract.jsonl | jq  -s  '[.[] | select(.action=="http://purl.imsglobal.o
 
 ```json
 {
-    "problem_set": "Relative motion",
-    "problem": "UM Physics 135 Midterm 1 Winter 12 Problem 08",
+    "problem_set": "Problem Set Name",
+    "problem": "Problem Name",
     "answerCorrect": "true",
     "time": "PT15S",
     "actor": "<actor_name>",
-    "start": "2017-05-05T04:31:33.000Z",
-    "end": "2017-05-05T04:31:48.000Z"
+    "start": "2016-05-05T04:31:33.000Z",
+    "end": "2016-05-05T04:31:48.000Z"
   }
 ```
 3. Run an anonymizer throught the data and make it available to the js.
