@@ -35,7 +35,7 @@
               "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
               "@type": "http://purl.imsglobal.org/caliper/v1/AssessmentItemEvent",
               "actor": {
-                "@id": "https://mcommunity.umich.edu/#profile:1",
+                "@id": "/#profile:1",
                 "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
                 "@type": "http://purl.imsglobal.org/caliper/v1/lis/Person",
                 "name": "1"
@@ -45,12 +45,12 @@
                 "@id": "https://docs.google.com/document/d/1OveeizOve81yaP2llIhoW2j75SJN4sz4AyV2RcZ7y30/pub",
                 "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
                 "@type": "http://purl.imsglobal.org/caliper/v1/AssessmentItem",
-                "name": "UM PHYSICS 240 Winter 2012 Final Exam Problem 09",
+                "name": "Problem name",
                 "isPartOf": {
-                  "@id": "https://problemroulette.lsa.umich.edu/courses/5/topics/147",
+                  "@id": "147",
                   "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
                   "@type": "http://purl.imsglobal.org/caliper/v1/Assessment",
-                  "name": "Polarization"
+                  "name": "Problem set name"
                 }
               },
               "generated": {
@@ -74,15 +74,15 @@
               },
               "eventTime": "2017-04-21T21:49:19.867Z",
               "edApp": {
-                "@id": "https://problemroulette.lsa.umich.edu/",
+                "@id": "some unique app id",
                 "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
                 "@type": "http://purl.imsglobal.org/caliper/v1/SoftwareApplication"
               },
               "group": {
-                "@id": "https://problemroulette.lsa.umich.edu/courses/5",
+                "@id": "some unique group id",
                 "@context": "http://purl.imsglobal.org/ctx/caliper/v1/Context",
                 "@type": "http://purl.imsglobal.org/caliper/v1/lis/CourseOffering",
-                "name": "Physics 240"
+                "name": "Course name"
               },
               "openlrsSourceId": "6ef42f91-5ec0-45c6-b045-5a51fce7cdca"
             }
@@ -95,14 +95,14 @@
         <pre class="prettyprint lang-js linenums">
         [{
           "action": "AssessmentItemEvent_Started",
-          "problem_set": "Coulomb's law",
-          "problem": "UM PHYSICS 240 Winter 2012 Midterm Exam 1 Problem 08",
+          "problem_set": "Problem set name",
+          "problem": "Problem name",
           "answerCorrect": null,
           "time": null,
           "actor": "2",
           "start": null,
           "end": null,
-          "class": "Physics 240"
+          "class": "Course name"
         }]
       </pre>
 
