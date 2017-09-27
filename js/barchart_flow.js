@@ -8,7 +8,6 @@ $('select').on('change', function() {
 })
 
 var makeGraph = function(student) {
-  console.log(student);
   d3.selectAll("#chart > *").remove();
   $.getJSON(student || "json/a_s.json", function(initResult) {
     data = initResult;
@@ -92,7 +91,7 @@ var makeGraph = function(student) {
       .style("width", "500px")
       .style("text-anchor", "end")
       .attr("dx", ".71em")
-      .style("text-anchor", "end")
+      .style("text-anchor", "end");
     svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
@@ -101,7 +100,7 @@ var makeGraph = function(student) {
       .attr("y", 2)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Seconds")
+      .text("Seconds");
 
     svg.selectAll(".bar")
       .data(data)
@@ -139,8 +138,8 @@ var makeGraph = function(student) {
         return y(moment.duration(d.time, moment.ISO_8601).asSeconds()) - 50;
       })
       .text(function(d) {
-        return d.count
+        return d.count;
       });
   });
-}
+};
 makeGraph();
