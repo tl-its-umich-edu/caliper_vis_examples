@@ -22,4 +22,4 @@ Get all action#Completed events
 
 LECTURE CAPTURE
 Get all events, concatenate event type and action fields
-cat leccap_events_50k.jsonl | jq  -s  '[.[] | {action:((."@type" |(.[37:]) ) + "_" + (.action |(.[50:]))), event_time: .object.currentTime, learning_ojective: .object.alignedLearningObjective, video: .object.isPartOf.name, course: .object.isPartOf.isPartOf.name, course_learning_objective: .object.isPartOf.isPartOf.alignedLearningObjective, lms_course: .group.name, lti_info: .membership.roles, actor: .actor."@id"}]' > 1srpass.json
+cat leccap_events_50k.jsonl | jq  -s  '[.[] | {action:((."@type" |(.[37:]) ) + "_" + (.action |(.[50:]))), media_event_time: .object.currentTime, learning_ojective: .object.alignedLearningObjective, video: .object.isPartOf.name, event_time: .eventTime, course: .object.isPartOf.isPartOf.name, course_learning_objective: .object.isPartOf.isPartOf.alignedLearningObjective, lms_course: .group.name, lti_info: (.membership.roles |(.[51:]) ) , actor: (.actor."@id" |(.[39:]) )}]' > 1srpass.json
