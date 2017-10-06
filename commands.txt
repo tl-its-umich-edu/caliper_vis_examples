@@ -18,3 +18,8 @@ Get all events from a specific actor, without the slurping (no -s) option
 
 Get all action#Completed events
 // cat your_raw_file.jsonl | jq  -s  '[.[] | select(.actor.name=="0fa0be48fb4b5abe568829b52a3d986663870176" and (.action=="http://purl.imsglobal.org/vocab/caliper/v1/action#Completed || .action=="http://purl.imsglobal.org/vocab/caliper/v1/action#Skipped“)) |  {problem_set: .object.isPartOf.name, problem: .object.name, answerCorrect: .generated.extensions.isStudentAnswerCorrect, time: .generated.attempt.duration, actor: .actor.name, start: .generated.attempt.startedAtTime, end:  .generated.attempt.endedAtTime, class: .group.name}]'  >  your_new_file.json
+
+
+LECTURE CAPTURE
+Get all events, concatenate event type and action fields
+cat leccap_events_50k.jsonl | jq  -s  '[.[] | {action:((."@type" |(.[37:]) ) + "_" + (.action |(.[50:]))), event_time: .object.currentTime, learning_ojective: .object.alignedLearningObjective, video: .object.isPartOf.name, course: .object.isPartOf.isPartOf.name, course_learning_objective: .object.isPartOf.isPartOf.alignedLearningObjective, lms_course: .group.name, lti_info: .membership.roles, actor: .actor."@id"}]' > 1srpass.json
