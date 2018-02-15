@@ -21,5 +21,6 @@ cat  pr_extract.jsonl | jq  -s  '[.[] | select(.action=="http://purl.imsglobal.o
 3. The js files manipulate this anonymzed array and serve the result to an NVD3 chart
 
 Note: need to run a web server to take care of cross origin requests.
+Note: after cloning do `bower install` to get dependencies
 
 A simple one is `python -m SimpleHTTPServer 8000`
